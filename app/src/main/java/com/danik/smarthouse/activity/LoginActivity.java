@@ -30,14 +30,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.danik.smarthouse.MainActivity;
 import com.danik.smarthouse.R;
-import com.danik.smarthouse.service.HttpClient;
+import com.danik.smarthouse.service.UserService;
+import com.danik.smarthouse.service.impl.UserServiceImpl;
+import com.danik.smarthouse.service.utils.HttpClient;
+import com.danik.smarthouse.service.utils.JsonMapper;
+import com.danik.smarthouse.service.utils.UserDetails;
+import com.danik.smarthouse.service.utils.model.Authorization;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -59,6 +69,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             "foo@example.com:hello", "bar@example.com:world"
     };
     HttpClient httpClient = new HttpClient();
+
+    private UserService userService = new UserServiceImpl();
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -94,27 +107,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                Map<String, String> stringStringMap = new HashMap<>();
-                stringStringMap.put("grant_type", "password");
-                stringStringMap.put("password", "123456");
-                stringStringMap.put("username", "danik1492@gmail.com");
-
-
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer Y2xpZW50X2d1aWxkX29mX3RlYWNoZXJzLmNvbTpzZWNyZXRfMDEwc2VydmVyLmNvbQ==");
-//                username=oleh.petryk@gmail.com&password=op250399&grant_type=password
-
-                String s = null;
-                try {
-                    s = new HttpClient("http://192.168.1.232:9090/oauth/token", "POST", stringStringMap, headers).execute().get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                Log.i("login", s);
                 attemptLogin();
-
             }
         });
 
@@ -180,6 +173,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        Log.i("tag", "mAT is null"+(mAuthTask==null));
         if (mAuthTask != null) {
             return;
         }
@@ -191,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-
+        Log.i("tag",String.format("email : %s, password : %s",email,password));
         boolean cancel = false;
         View focusView = null;
 
@@ -216,6 +210,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
+            Log.i("tag","cancel");
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
@@ -340,9 +335,56 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPassword = password;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            Log.i("tag", "__________________________________________");
+            Log.i("tag", "do In Background");
+            Log.i("tag", "__________________________________________");
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL("http://192.168.1.232:9090/oauth/token" +
+                        "?username=" + mEmail +
+                        "&password=" + mPassword +
+                        "&grant_type=password");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Authorization", "Basic Y2xpZW50X2d1aWxkX29mX3RlYWNoZXJzLmNvbTpzZWNyZXRfMDEwc2VydmVyLmNvbQ==");
+                connection.setRequestMethod("POST");
+                connection.connect();
+
+                if(connection.getResponseCode() == 401 ||connection.getResponseCode() == 400){
+                    Log.e("tag", "Baaaaaaaaaaaaaaaaaaaaaaad");
+                    return false;
+                }
+
+                InputStream stream = connection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+                Log.i("tag", buffer.toString());
+                String response = buffer.toString();
+                UserDetails.accessToken = JsonMapper.parseJSON(response, Authorization.class).getAccess_token();
+                Log.e("user", UserDetails.accessToken.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             try {
                 // Simulate network access.
@@ -359,7 +401,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
 
-            // TODO: register the new account here.
+
             return true;
         }
 
@@ -367,8 +409,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-
             if (success) {
+                UserDetails.user = userService.getUser();
+                Log.e("user", UserDetails.user.toString());
+                LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

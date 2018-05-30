@@ -26,6 +26,8 @@
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".activity.SignUpActivity"></activity>
+
+        <service android:name=".service.impl.BackgroundService" />
     </application>
 
 </manifest>

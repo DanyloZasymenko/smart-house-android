@@ -1,9 +1,10 @@
-package com.danik.smarthouse.service;
+package com.danik.smarthouse.service.utils;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,12 +18,13 @@ import java.util.Map;
 public class HttpClient extends AsyncTask<String, String, String> {
 
     private String uri;
-    private  String method;
+    private String method;
     private Map<String, String> body;
     private Map<String, String> headers;
-    public HttpClient(){
 
-}
+    public HttpClient() {
+
+    }
 
     public HttpClient(String uri, String method, Map<String, String> body, Map<String, String> headers) {
         this.uri = uri;
@@ -31,51 +33,9 @@ public class HttpClient extends AsyncTask<String, String, String> {
         this.headers = headers;
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected String doInBackground(String... params) {
-//
-//        HttpURLConnection connection = null;
-//        BufferedReader reader = null;
-//
-//        try {
-//            URL url = new URL(params[0]);
-//            connection = (HttpURLConnection) url.openConnection();
-//            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-//            connection.setRequestMethod(params[1]);
-//            connection.connect();
-//
-//            InputStream stream = connection.getInputStream();
-//            StringBuffer buffer = new StringBuffer();
-//
-//            reader = new BufferedReader(new InputStreamReader(stream));
-//
-//            String line = "";
-//            while ((line = reader.readLine()) != null) {
-//                buffer.append(line);
-//            }
-//
-//            return buffer.toString();
-//
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (connection != null) {
-//                connection.disconnect();
-//            }
-//            try {
-//                if (reader != null) {
-//                    reader.close();
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return null;
 
         BufferedReader reader = null;
         HttpURLConnection connection = null;
@@ -91,8 +51,8 @@ public class HttpClient extends AsyncTask<String, String, String> {
 
             URL url = new URL(uri + bodyUrl.toString());
             connection = (HttpURLConnection) url.openConnection();
-            for (Map.Entry<String, String> stringStringEntry :
-                    headers.entrySet()) {
+            for (Map.Entry<String, String> stringStringEntry : headers.entrySet()) {
+                Log.i("headers", "key : " + stringStringEntry.getKey() + " value : " + stringStringEntry.getValue());
                 connection.setRequestProperty(stringStringEntry.getKey(), stringStringEntry.getValue());
             }
             connection.setRequestMethod(method);

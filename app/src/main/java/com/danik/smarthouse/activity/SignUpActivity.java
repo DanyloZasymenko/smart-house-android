@@ -10,9 +10,9 @@ import android.widget.EditText;
 
 import com.danik.smarthouse.R;
 import com.danik.smarthouse.model.User;
-import com.danik.smarthouse.service.HttpClient;
-import com.danik.smarthouse.service.JsonMapper;
-import com.danik.smarthouse.service.UserDetails;
+import com.danik.smarthouse.service.utils.HttpClient;
+import com.danik.smarthouse.service.utils.JsonMapper;
+import com.danik.smarthouse.service.utils.UserDetails;
 
 import java.util.concurrent.ExecutionException;
 
