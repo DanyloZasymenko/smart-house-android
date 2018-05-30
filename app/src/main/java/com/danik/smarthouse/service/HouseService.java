@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface HouseService {
 
-    House save(House house);
+    House save(String name, String serial);
 
-    House update(House house);
+    House update(Long id, String name, String serial);
 
     House findOne(Long id);
 

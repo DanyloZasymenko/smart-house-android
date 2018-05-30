@@ -1,4 +1,5 @@
 package com.danik.smarthouse.service.impl;
+
 import android.app.Service;
 import android.content.*;
 import android.os.*;

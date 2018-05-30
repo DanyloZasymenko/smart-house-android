@@ -344,7 +344,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             try {
-                URL url = new URL("http://192.168.1.232:9090/oauth/token" +
+                URL url = new URL("http://192.168.1.7:9090/oauth/token" +
+//                URL url = new URL("http://192.168.1.232:9090/oauth/token" +
                         "?username=" + mEmail +
                         "&password=" + mPassword +
                         "&grant_type=password");

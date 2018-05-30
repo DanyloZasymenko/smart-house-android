@@ -15,7 +15,8 @@ import java.util.concurrent.ExecutionException;
 
 public class UserServiceImpl implements UserService {
 
-    private static final String SERVER_URL = "http://192.168.1.232:9090/user";
+//    private static final String SERVER_URL = "http://192.168.1.232:9090/user";
+    private static final String SERVER_URL = "http://192.168.1.7:9090/user";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;

@@ -2,13 +2,14 @@ package com.danik.smarthouse.service;
 
 import com.danik.smarthouse.model.LightConfig;
 
+import java.sql.Time;
 import java.util.List;
 
 public interface LightConfigService {
 
-    LightConfig save(LightConfig lightConfig);
+    LightConfig save(Time startTime, Time endTime, Boolean active);
 
-    LightConfig update(LightConfig lightConfig);
+    LightConfig update(Long id, Time startTime, Time endTime, Boolean active);
 
     LightConfig findOne(Long id);
 
