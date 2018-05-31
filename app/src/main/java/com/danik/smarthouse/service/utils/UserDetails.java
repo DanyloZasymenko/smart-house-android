@@ -4,7 +4,18 @@ import com.danik.smarthouse.model.User;
 
 public class UserDetails {
 
-    public static String accessToken=null;
+    public static String accessToken = null;
 
-    public static User user=null;
+    public static User user = null;
+
+    public static Boolean logout() {
+        try {
+            accessToken = null;
+            user = null;
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

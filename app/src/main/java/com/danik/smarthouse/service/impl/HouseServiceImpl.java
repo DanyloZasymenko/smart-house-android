@@ -13,8 +13,8 @@ import java.util.concurrent.ExecutionException;
 
 public class HouseServiceImpl implements HouseService {
 
-    //    private static final String SERVER_URL = "http://192.168.1.232:9090/house";
-    private static final String SERVER_URL = "http://192.168.1.7:9090/house";
+        private static final String SERVER_URL = "http://192.168.1.232:9090/house";
+//    private static final String SERVER_URL = "http://192.168.1.7:9090/house";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;
@@ -60,6 +60,24 @@ public class HouseServiceImpl implements HouseService {
             e.printStackTrace();
         }
         return JsonMapper.parseJSON(response, House.class);
+    }
+
+    @Override
+    public Boolean getStatus() {
+        String response = "";
+        uri = "/online";
+        method = "GET";
+        body = new HashMap<>();
+        headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + UserDetails.accessToken);
+        headers.put("Content-Type", "application/json; charset=UTF-8");
+        httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
+        try {
+            response = httpClient.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return response.equals("true");
     }
 
     @Override
@@ -120,6 +138,24 @@ public class HouseServiceImpl implements HouseService {
     public House findBySerial(String serial) {
         String response = "";
         uri = "/find-by-serial/" + serial;
+        method = "GET";
+        body = new HashMap<>();
+        headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + UserDetails.accessToken);
+        headers.put("Content-Type", "application/json; charset=UTF-8");
+        httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
+        try {
+            response = httpClient.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return JsonMapper.parseJSON(response, House.class);
+    }
+
+    @Override
+    public House createOrFindBySerial(String serial) {
+        String response = "";
+        uri = "/create-or-find-by-serial/" + serial;
         method = "GET";
         body = new HashMap<>();
         headers = new HashMap<>();

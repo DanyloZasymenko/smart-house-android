@@ -10,6 +10,8 @@ public interface HouseService {
 
     House update(Long id, String name, String serial);
 
+    Boolean getStatus();
+
     House findOne(Long id);
 
     List<House> findAll();
@@ -17,4 +19,6 @@ public interface HouseService {
     Boolean delete(Long id);
 
     House findBySerial(String serial);
+
+    House createOrFindBySerial(String serial);
 }

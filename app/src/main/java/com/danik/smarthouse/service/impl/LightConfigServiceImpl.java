@@ -14,8 +14,8 @@ import java.util.concurrent.ExecutionException;
 
 public class LightConfigServiceImpl implements LightConfigService {
 
-    //    private static final String SERVER_URL = "http://192.168.1.232:9090/light-config";
-    private static final String SERVER_URL = "http://192.168.1.7:9090/light-config";
+        private static final String SERVER_URL = "http://192.168.1.232:9090/light-config";
+//    private static final String SERVER_URL = "http://192.168.1.7:9090/light-config";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;

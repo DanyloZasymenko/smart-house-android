@@ -14,8 +14,8 @@ import java.util.concurrent.ExecutionException;
 
 public class ClimateConfigServiceImpl implements ClimateConfigService {
 
-//    private static final String SERVER_URL = "http://192.168.1.232:9090/climate-config";
-    private static final String SERVER_URL = "http://192.168.1.7:9090/climate-config";
+    private static final String SERVER_URL = "http://192.168.1.232:9090/climate-config";
+//    private static final String SERVER_URL = "http://192.168.1.7:9090/climate-config";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;

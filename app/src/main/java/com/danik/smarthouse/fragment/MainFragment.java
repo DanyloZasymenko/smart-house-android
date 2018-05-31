@@ -3,13 +3,29 @@ package com.danik.smarthouse.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.danik.smarthouse.R;
+import com.danik.smarthouse.model.Device;
+import com.danik.smarthouse.model.Temperature;
+import com.danik.smarthouse.service.DeviceService;
+import com.danik.smarthouse.service.HouseService;
+import com.danik.smarthouse.service.impl.DeviceServiceImpl;
+import com.danik.smarthouse.service.impl.HouseServiceImpl;
+import com.danik.smarthouse.service.utils.UserDetails;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,55 +36,61 @@ import com.danik.smarthouse.R;
  * create an instance of this fragment.
  */
 public class MainFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+//    final Handler mHandler = new Handler();
+    TextView textView;
+    private DeviceService deviceService = new DeviceServiceImpl();
+    private HouseService houseService = new HouseServiceImpl();
     private OnFragmentInteractionListener mListener;
+//    private Thread mUiThread;
+//    private ScheduledExecutorService scheduler ;
 
-    public MainFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(String param1, String param2) {
-        MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static MainFragment newInstance() {
+        return new MainFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
+        ConstraintLayout temperatureLayout = view.findViewById(R.id.temperatureLayout);
+        LinearLayout devicesLayout = view.findViewById(R.id.devicesLayout);
+        List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
+        for (Device device : devices) {
+            devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
+        }
+//        scheduler= Executors.newSingleThreadScheduledExecutor();
+//        textView = view.findViewById(R.id.onlinestatus);
+//        scheduler.scheduleAtFixedRate(() -> {
+//            textView.setText("online:["+houseService.getStatus() + "]");
+//        }, 0, 5, TimeUnit.SECONDS);
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+//        scheduler.shutdown();
+        super.onDestroyView();
+    }
+
+//    public final void runOnUiThread(Runnable action) {
+//        while (true) {
+//            if (Thread.currentThread() != mUiThread) {
+//                mHandler.post(action);
+//            } else {
+//                action.run();
+//            }
+//            try {
+//                Thread.sleep(5000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -108,4 +130,5 @@ public class MainFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

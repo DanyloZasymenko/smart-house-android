@@ -1,6 +1,7 @@
 package com.danik.smarthouse.model;
 
 import com.danik.smarthouse.model.enums.DeviceType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Device {
 
@@ -9,6 +10,7 @@ public class Device {
     private Integer pin;
     private DeviceType deviceType;
     private Boolean active;
+    @JsonIgnore
     private House house;
 
     public Long getId() {
@@ -38,10 +40,12 @@ public class Device {
         return this;
     }
 
+    @JsonIgnore
     public House getHouse() {
         return house;
     }
 
+    @JsonIgnore
     public Device setHouse(House house) {
         this.house = house;
         return this;
@@ -73,7 +77,6 @@ public class Device {
                 ", pin=" + pin +
                 ", deviceType=" + deviceType +
                 ", active=" + active +
-                ", house=" + house.getId() +
                 '}';
     }
 }

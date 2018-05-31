@@ -5,9 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -19,12 +17,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.danik.smarthouse.activity.LoginActivity;
 import com.danik.smarthouse.fragment.MainFragment;
 import com.danik.smarthouse.fragment.MyDevicesFragment;
+import com.danik.smarthouse.fragment.NewDeviceFragment;
+import com.danik.smarthouse.fragment.NewHouseFragment;
 import com.danik.smarthouse.fragment.SettingsFragment;
+import com.danik.smarthouse.model.Temperature;
+import com.danik.smarthouse.service.AndroidService;
+import com.danik.smarthouse.service.impl.AndroidServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Optional.ofNullable;
 
@@ -32,7 +40,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnFragmentInteractionListener,
         MyDevicesFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener {
+        SettingsFragment.OnFragmentInteractionListener,
+        NewHouseFragment.OnFragmentInteractionListener,
+        NewDeviceFragment.OnFragmentInteractionListener {
+
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+    private AndroidService androidService = new AndroidServiceImpl();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -41,15 +55,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,11 +68,24 @@ public class MainActivity extends AppCompatActivity
 //        Log.i("user main act", UserDetails.user.toString());
         Log.i("access token main act", String.valueOf(ofNullable(UserDetails.accessToken).isPresent()));
 
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
+        TextView tvHouseName = (TextView) headerView.findViewById(R.id.tvHouseName);
+
         if (UserDetails.user == null) {
             MainActivity.this.startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        } else if (UserDetails.user.getHouse() == null) {
+            changeFragment(R.id.main_frame, NewHouseFragment.newInstance("", ""));
         } else {
-            changeFragment(R.id.main_frame, MainFragment.newInstance("", ""));
+            scheduler.scheduleAtFixedRate(() -> {
+                Temperature.getInstance().setValues(androidService.getTemperature());
+            }, 0, 15, TimeUnit.SECONDS);
+            changeFragment(R.id.main_frame, MainFragment.newInstance());
+            tvUserName.setText(UserDetails.user.getName() + " " + UserDetails.user.getMiddleName() + " " + UserDetails.user.getLastName());
+            tvHouseName.setText(UserDetails.user.getHouse().getName());
         }
+
+
     }
 
     @Override
@@ -108,11 +126,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
-            changeFragment(R.id.main_frame, MainFragment.newInstance("", ""));
+            changeFragment(R.id.main_frame, MainFragment.newInstance());
         } else if (id == R.id.nav_my_devices) {
-            changeFragment(R.id.main_frame, MyDevicesFragment.newInstance("", ""));
+            changeFragment(R.id.main_frame, MyDevicesFragment.newInstance());
         } else if (id == R.id.nav_settings) {
             changeFragment(R.id.main_frame, SettingsFragment.newInstance("", ""));
+        } else if (id == R.id.nav_exit) {
+            UserDetails.logout();
+            this.recreate();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -132,5 +153,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onFragmentInteraction(Integer id) {
+        changeFragment(id, NewDeviceFragment.newInstance());
     }
 }
