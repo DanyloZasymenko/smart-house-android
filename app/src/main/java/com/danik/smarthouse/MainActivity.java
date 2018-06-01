@@ -30,6 +30,7 @@ import com.danik.smarthouse.service.AndroidService;
 import com.danik.smarthouse.service.impl.AndroidServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity
 //        Log.i("user main act", UserDetails.user.toString());
         Log.i("access token main act", String.valueOf(ofNullable(UserDetails.accessToken).isPresent()));
 
+        TextView tvCurrentTemperature = (TextView) findViewById(R.id.tvCurrentTemperature);
         View headerView = navigationView.getHeaderView(0);
         TextView tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
         TextView tvHouseName = (TextView) headerView.findViewById(R.id.tvHouseName);
@@ -79,6 +81,12 @@ public class MainActivity extends AppCompatActivity
         } else {
             scheduler.scheduleAtFixedRate(() -> {
                 Temperature.getInstance().setValues(androidService.getTemperature());
+                Log.i("temperature", Temperature.getInstance().toString());
+//                tvCurrentTemperature.setText(String.format(Locale.UK,"%f", Temperature.getInstance().getTemperatureC()));
+//                tvCurrentTemperature.setText(Float.toString(Temperature.getInstance().getTemperatureC()));
+//                tvCurrentTemperature.setText(String.valueOf(Temperature.getInstance().getTemperatureC()));
+//                tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC() + "");
+
             }, 0, 15, TimeUnit.SECONDS);
             changeFragment(R.id.main_frame, MainFragment.newInstance());
             tvUserName.setText(UserDetails.user.getName() + " " + UserDetails.user.getMiddleName() + " " + UserDetails.user.getLastName());

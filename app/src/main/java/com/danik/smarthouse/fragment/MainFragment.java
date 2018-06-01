@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,10 @@ public class MainFragment extends Fragment {
         for (Device device : devices) {
             devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
         }
+        String text = Temperature.getInstance().getTemperatureC().toString();
+        Log.e("text", text);
+//                tvCurrentTemperature.setText(text);
+        ((TextView) view.findViewById(R.id.tvCurrentTemperature)).setText(text);
 //        scheduler= Executors.newSingleThreadScheduledExecutor();
 //        textView = view.findViewById(R.id.onlinestatus);
 //        scheduler.scheduleAtFixedRate(() -> {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class OneDeviceMainFragment extends Fragment {
                 break;
         }
         sDeviceActive.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Log.i("change active", String.valueOf(isChecked));
             androidService.changeActive(device.getId(), isChecked);
         });
         return view;
