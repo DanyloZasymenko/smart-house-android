@@ -15,8 +15,9 @@ import java.util.concurrent.ExecutionException;
 
 public class UserServiceImpl implements UserService {
 
-    private static final String SERVER_URL = "http://192.168.1.232:9090/user";
+    //    private static final String SERVER_URL = "http://192.168.1.232:9090/user";
 //    private static final String SERVER_URL = "http://192.168.1.7:9090/user";
+    private static final String SERVER_URL = "http://mplus.hopto.org:9090/user";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
         }
         try {
             return JsonMapper.parseJSON(response, User.class);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

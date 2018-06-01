@@ -13,8 +13,9 @@ import java.util.concurrent.ExecutionException;
 
 public class AndroidServiceImpl implements AndroidService {
 
-    private static final String SERVER_URL = "http://192.168.1.232:9090/android";
+    //    private static final String SERVER_URL = "http://192.168.1.232:9090/android";
     //    private static final String SERVER_URL = "http://192.168.1.7:9090/android";
+    private static final String SERVER_URL = "http://mplus.hopto.org:9090/android";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;

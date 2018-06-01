@@ -14,8 +14,9 @@ import java.util.concurrent.ExecutionException;
 
 public class ClimateConfigServiceImpl implements ClimateConfigService {
 
-    private static final String SERVER_URL = "http://192.168.1.232:9090/climate-config";
+    //    private static final String SERVER_URL = "http://192.168.1.232:9090/climate-config";
 //    private static final String SERVER_URL = "http://192.168.1.7:9090/climate-config";
+    private static final String SERVER_URL = "http://mplus.hopto.org:9090/climate-config";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;
@@ -45,7 +46,7 @@ public class ClimateConfigServiceImpl implements ClimateConfigService {
     }
 
     @Override
-    public ClimateConfig update(Long id,Double temperature, Time startTime, Time endTime, Boolean active) {
+    public ClimateConfig update(Long id, Double temperature, Time startTime, Time endTime, Boolean active) {
         String response = "";
         uri = "/update";
         method = "POST";

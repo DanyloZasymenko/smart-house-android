@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        Log.i("tag", "mAT is null"+(mAuthTask==null));
+        Log.i("tag", "mAT is null" + (mAuthTask == null));
         if (mAuthTask != null) {
             return;
         }
@@ -185,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        Log.i("tag",String.format("email : %s, password : %s",email,password));
+        Log.i("tag", String.format("email : %s, password : %s", email, password));
         boolean cancel = false;
         View focusView = null;
 
@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            Log.i("tag","cancel");
+            Log.i("tag", "cancel");
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
@@ -345,7 +345,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             BufferedReader reader = null;
             try {
 //                URL url = new URL("http://192.168.1.7:9090/oauth/token" +
-                URL url = new URL("http://192.168.1.232:9090/oauth/token" +
+//                URL url = new URL("http://192.168.1.232:9090/oauth/token" +
+                URL url = new URL("http://mplus.hopto.org:9090/oauth/token" +
                         "?username=" + mEmail +
                         "&password=" + mPassword +
                         "&grant_type=password");
@@ -354,7 +355,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 connection.setRequestMethod("POST");
                 connection.connect();
 
-                if(connection.getResponseCode() == 401 ||connection.getResponseCode() == 400){
+                if (connection.getResponseCode() == 401 || connection.getResponseCode() == 400) {
                     Log.e("tag", "Baaaaaaaaaaaaaaaaaaaaaaad");
                     return false;
                 }

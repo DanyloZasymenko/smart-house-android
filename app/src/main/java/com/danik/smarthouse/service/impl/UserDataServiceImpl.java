@@ -5,10 +5,11 @@ import com.danik.smarthouse.service.UserDataService;
 
 import java.util.List;
 
-public class UserDataServiceImpl implements UserDataService{
+public class UserDataServiceImpl implements UserDataService {
 
-    private static final String SERVER_URL = "http://192.168.1.232:9090/user-data";
+    //    private static final String SERVER_URL = "http://192.168.1.232:9090/user-data";
 //    private static final String SERVER_URL = "http://192.168.1.7:9090/user-data";
+    private static final String SERVER_URL = "http://mplus.hopto.org:9090/user-data";
 
     @Override
     public UserData save(UserData userData) {
