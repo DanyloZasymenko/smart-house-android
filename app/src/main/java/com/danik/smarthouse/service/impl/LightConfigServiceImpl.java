@@ -4,6 +4,7 @@ import com.danik.smarthouse.model.LightConfig;
 import com.danik.smarthouse.service.LightConfigService;
 import com.danik.smarthouse.service.utils.HttpClient;
 import com.danik.smarthouse.service.utils.JsonMapper;
+import com.danik.smarthouse.service.utils.Url;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 import java.sql.Time;
@@ -14,9 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 public class LightConfigServiceImpl implements LightConfigService {
 
-    //        private static final String SERVER_URL = "http://192.168.1.232:9090/light-config";
-//    private static final String SERVER_URL = "http://192.168.1.7:9090/light-config";
-    private static final String SERVER_URL = "http://mplus.hopto.org:9090/light-config";
+    private final String SERVER_URL = Url.url + "/light-config";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;

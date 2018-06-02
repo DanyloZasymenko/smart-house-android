@@ -4,6 +4,7 @@ import com.danik.smarthouse.model.ClimateConfig;
 import com.danik.smarthouse.service.ClimateConfigService;
 import com.danik.smarthouse.service.utils.HttpClient;
 import com.danik.smarthouse.service.utils.JsonMapper;
+import com.danik.smarthouse.service.utils.Url;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 import java.sql.Time;
@@ -14,9 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ClimateConfigServiceImpl implements ClimateConfigService {
 
-    //    private static final String SERVER_URL = "http://192.168.1.232:9090/climate-config";
-//    private static final String SERVER_URL = "http://192.168.1.7:9090/climate-config";
-    private static final String SERVER_URL = "http://mplus.hopto.org:9090/climate-config";
+    private final String SERVER_URL = Url.url + "/climate-config";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;

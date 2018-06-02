@@ -4,6 +4,7 @@ import com.danik.smarthouse.model.House;
 import com.danik.smarthouse.service.HouseService;
 import com.danik.smarthouse.service.utils.HttpClient;
 import com.danik.smarthouse.service.utils.JsonMapper;
+import com.danik.smarthouse.service.utils.Url;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 import java.util.HashMap;
@@ -13,9 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 public class HouseServiceImpl implements HouseService {
 
-    //        private static final String SERVER_URL = "http://192.168.1.232:9090/house";
-//    private static final String SERVER_URL = "http://192.168.1.7:9090/house";
-    private static final String SERVER_URL = "http://mplus.hopto.org:9090/house";
+    private final String SERVER_URL = Url.url + "/house";
     private String uri = null;
     private String method = null;
     private Map<String, String> body;
