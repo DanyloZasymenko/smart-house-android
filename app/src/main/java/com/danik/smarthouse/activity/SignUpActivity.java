@@ -23,20 +23,20 @@ public class SignUpActivity extends AppCompatActivity {
 
     private UserService userService = new UserServiceImpl();
 
-    final EditText etName = (EditText) findViewById(R.id.etName);
-    final EditText etMiddleName = (EditText) findViewById(R.id.etMiddleName);
-    final EditText etLastName = (EditText) findViewById(R.id.etLastName);
-    final EditText etEmail = (EditText) findViewById(R.id.etEmail);
-    final EditText etPassword = (EditText) findViewById(R.id.etPassword);
-    final EditText etRepeatPassword = (EditText) findViewById(R.id.etRepeatPassword);
-    final Button bSignUp = (Button) findViewById(R.id.bSignUp);
+    private EditText etName;
+    private EditText etMiddleName;
+    private EditText etLastName;
+    private EditText etEmail;
+    private EditText etPassword;
+    private EditText etRepeatPassword;
+    private Button bSignUp;
 
-    final String name = ((EditText) findViewById(R.id.etName)).getText().toString();
-    final String middleName = ((EditText) findViewById(R.id.etMiddleName)).getText().toString();
-    final String lastName = ((EditText) findViewById(R.id.etLastName)).getText().toString();
-    final String email = ((EditText) findViewById(R.id.etEmail)).getText().toString();
-    final String password = ((EditText) findViewById(R.id.etPassword)).getText().toString();
-    final String repeatPassword = ((EditText) findViewById(R.id.etRepeatPassword)).getText().toString();
+    private String name;
+    private String middleName;
+    private String lastName;
+    private String email;
+    private String password;
+    private String repeatPassword;
 
     boolean cancel = false;
     View focusView = null;
@@ -46,20 +46,33 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        etName = (EditText) findViewById(R.id.etName);
+        etMiddleName = (EditText) findViewById(R.id.etMiddleName);
+        etLastName = (EditText) findViewById(R.id.etLastName);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        etRepeatPassword = (EditText) findViewById(R.id.etRepeatPassword);
+        bSignUp = (Button) findViewById(R.id.bSignUp);
+
         bSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 attemptSignUp();
-                UserDetails.user = userService.save(name, middleName, lastName, email, password);
-                Log.e("user_save", UserDetails.user.toString());
-                if (UserDetails.user != null) {
-                    SignUpActivity.this.startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                }
             }
         });
     }
 
     private void attemptSignUp() {
+
+        setErrorsNull();
+
+        name = etName.getText().toString();
+        middleName = etMiddleName.getText().toString();
+        lastName = etLastName.getText().toString();
+        email = etEmail.getText().toString();
+        password = etPassword.getText().toString();
+        repeatPassword = etRepeatPassword.getText().toString();
+
         isFieldEmpty(etName);
         isFieldEmpty(etMiddleName);
         isFieldEmpty(etLastName);
@@ -83,6 +96,12 @@ public class SignUpActivity extends AppCompatActivity {
         if (cancel) {
             Log.i("tag", "cancel");
             focusView.requestFocus();
+        } else {
+            UserDetails.user = userService.save(name, middleName, lastName, email, password);
+            Log.e("user_save", UserDetails.user.toString());
+            if (UserDetails.user != null) {
+                SignUpActivity.this.startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            }
         }
     }
 
@@ -105,5 +124,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
+    }
+
+    private void setErrorsNull() {
+        etName.setError(null);
+        etMiddleName.setError(null);
+        etLastName.setError(null);
+        etEmail.setError(null);
+        etPassword.setError(null);
+        etRepeatPassword.setError(null);
     }
 }

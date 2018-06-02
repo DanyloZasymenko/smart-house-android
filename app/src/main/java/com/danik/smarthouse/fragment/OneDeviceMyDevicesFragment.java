@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.danik.smarthouse.MainActivity;
 import com.danik.smarthouse.R;
 import com.danik.smarthouse.model.Device;
 
@@ -53,6 +54,10 @@ public class OneDeviceMyDevicesFragment extends Fragment {
             default:
                 break;
         }
+
+        bDeviceSettings.setOnClickListener(view1 -> {
+            new MainActivity().moveToNewUserData();
+        });
         return view;
     }
 

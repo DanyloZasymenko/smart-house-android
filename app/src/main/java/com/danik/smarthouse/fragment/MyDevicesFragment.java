@@ -98,7 +98,7 @@ public class MyDevicesFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Integer id);
-    }
+        }
 
     private void changeFragment(Integer id, View view, Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

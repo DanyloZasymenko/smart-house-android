@@ -24,6 +24,8 @@ import com.danik.smarthouse.fragment.MainFragment;
 import com.danik.smarthouse.fragment.MyDevicesFragment;
 import com.danik.smarthouse.fragment.NewDeviceFragment;
 import com.danik.smarthouse.fragment.NewHouseFragment;
+import com.danik.smarthouse.fragment.NewUserDataFragment;
+import com.danik.smarthouse.fragment.OneDeviceMyDevicesFragment;
 import com.danik.smarthouse.fragment.SettingsFragment;
 import com.danik.smarthouse.model.Temperature;
 import com.danik.smarthouse.service.AndroidService;
@@ -43,7 +45,9 @@ public class MainActivity extends AppCompatActivity
         MyDevicesFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
         NewHouseFragment.OnFragmentInteractionListener,
-        NewDeviceFragment.OnFragmentInteractionListener {
+        NewDeviceFragment.OnFragmentInteractionListener,
+        OneDeviceMyDevicesFragment.OnFragmentInteractionListener,
+        NewUserDataFragment.OnFragmentInteractionListener {
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -167,4 +171,11 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Integer id) {
         changeFragment(id, NewDeviceFragment.newInstance());
     }
+
+    public void moveToNewUserData() {
+        Log.i("move", "in move");
+        changeFragment(R.id.main_frame, NewUserDataFragment.newInstance());
+    }
+
+
 }
