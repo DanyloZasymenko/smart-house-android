@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity
 //        Log.i("user main act", UserDetails.user.toString());
         Log.i("access token main act", String.valueOf(ofNullable(UserDetails.accessToken).isPresent()));
 
-        TextView tvCurrentTemperature = (TextView) findViewById(R.id.tvCurrentTemperature);
         View headerView = navigationView.getHeaderView(0);
         TextView tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
         TextView tvHouseName = (TextView) headerView.findViewById(R.id.tvHouseName);
@@ -87,14 +86,13 @@ public class MainActivity extends AppCompatActivity
             changeFragment(R.id.main_frame, NewHouseFragment.newInstance("", ""));
         } else {
             scheduler.scheduleAtFixedRate(() -> {
-                Temperature.getInstance().setValues(androidService.getTemperature());
-                Log.i("temperature", Temperature.getInstance().toString());
-//                tvCurrentTemperature.setText(String.format(Locale.UK,"%f", Temperature.getInstance().getTemperatureC()));
-//                tvCurrentTemperature.setText(Float.toString(Temperature.getInstance().getTemperatureC()));
-//                tvCurrentTemperature.setText(String.valueOf(Temperature.getInstance().getTemperatureC()));
-//                tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC() + "");
-
-            }, 0, 15, TimeUnit.SECONDS);
+                try {
+                    Temperature.getInstance().setValues(androidService.getTemperature());
+                    Log.i("temperature", Temperature.getInstance().toString());
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }, 0, 10, TimeUnit.SECONDS);
             changeFragment(R.id.main_frame, MainFragment.newInstance());
             tvUserName.setText(UserDetails.user.getName() + " " + UserDetails.user.getMiddleName() + " " + UserDetails.user.getLastName());
             tvHouseName.setText(UserDetails.user.getHouse().getName());
