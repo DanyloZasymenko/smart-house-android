@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, String name, String middleName, String lastName, String email, String password) {
+    public User update(Long id, String name, String middleName, String lastName, String email, String password, Float temperature) {
         String response = "";
         uri = "/update";
         method = "POST";
@@ -83,6 +83,7 @@ public class UserServiceImpl implements UserService {
         body.put("lastName", lastName);
         body.put("email", email);
         body.put("password", password);
+        body.put("temperature", temperature.toString());
         headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + UserDetails.accessToken);
         headers.put("Content-Type", "application/json; charset=UTF-8");

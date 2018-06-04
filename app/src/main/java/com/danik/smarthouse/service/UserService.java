@@ -14,7 +14,13 @@ public interface UserService {
               String email,
               String password);
 
-    User update(Long id, String name, String middleName, String lastName, String email, String password);
+    User update(Long id,
+                String name,
+                String middleName,
+                String lastName,
+                String email,
+                String password,
+                Float temperature);
 
     User findOne(Long id);
 

@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface UserDataService {
 
-    UserData save(UserData userData);
+    UserData saveForClimateConfig(Long deviceId, Long climateConfigId);
+
+    UserData saveForLightConfig(Long deviceId, Long lightConfigId);
 
     UserData update(UserData userData);
 

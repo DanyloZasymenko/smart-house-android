@@ -6,13 +6,13 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_main"
-            android:title="Головна" />
-        <item
-            android:id="@+id/nav_my_devices"
             android:title="Мій будинок" />
-        <item
-            android:id="@+id/nav_settings"
-            android:title="Налаштування" />
+        <!--<item-->
+            <!--android:id="@+id/nav_my_devices"-->
+            <!--android:title="Мій будинок" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_settings"-->
+            <!--android:title="Налаштування" />-->
         <item
             android:id="@+id/nav_exit"
             android:title="Вийти" />

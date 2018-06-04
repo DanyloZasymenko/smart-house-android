@@ -7,7 +7,6 @@ import com.danik.smarthouse.service.utils.JsonMapper;
 import com.danik.smarthouse.service.utils.Url;
 import com.danik.smarthouse.service.utils.UserDetails;
 
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +22,13 @@ public class LightConfigServiceImpl implements LightConfigService {
     private HttpClient httpClient;
 
     @Override
-    public LightConfig save(Time startTime, Time endTime, Boolean active) {
+    public LightConfig save(String startTime, String endTime, Boolean active) {
         String response = "";
         uri = "/save";
         method = "POST";
         body = new HashMap<>();
-        body.put("startTime", startTime.toString());
-        body.put("endTime", endTime.toString());
+        body.put("startTime", startTime);
+        body.put("endTime", endTime);
         body.put("active", active.toString());
         headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + UserDetails.accessToken);
@@ -44,14 +43,14 @@ public class LightConfigServiceImpl implements LightConfigService {
     }
 
     @Override
-    public LightConfig update(Long id, Time startTime, Time endTime, Boolean active) {
+    public LightConfig update(Long id, String startTime, String endTime, Boolean active) {
         String response = "";
         uri = "/update";
         method = "POST";
         body = new HashMap<>();
         body.put("id", id.toString());
-        body.put("startTime", startTime.toString());
-        body.put("endTime", endTime.toString());
+        body.put("startTime", startTime);
+        body.put("endTime", endTime);
         body.put("active", active.toString());
         headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + UserDetails.accessToken);

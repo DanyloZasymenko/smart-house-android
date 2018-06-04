@@ -173,4 +173,22 @@ public class DeviceServiceImpl implements DeviceService {
         }
         return JsonMapper.parseJSONToList(response, Device.class);
     }
+
+    @Override
+    public List<Device> findAllByDeviceTypeAndHouseId(Integer deviceTypeNumber, Long houseId) {
+        String response = "";
+        uri = "/find-all-by-device-type-and-house-id/" + deviceTypeNumber + "/" + houseId;
+        method = "GET";
+        body = new HashMap<>();
+        headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + UserDetails.accessToken);
+        headers.put("Content-Type", "application/json; charset=UTF-8");
+        httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
+        try {
+            response = httpClient.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return JsonMapper.parseJSONToList(response, Device.class);
+    }
 }

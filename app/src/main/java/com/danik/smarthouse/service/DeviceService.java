@@ -1,6 +1,7 @@
 package com.danik.smarthouse.service;
 
 import com.danik.smarthouse.model.Device;
+import com.danik.smarthouse.model.enums.DeviceType;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface DeviceService {
     List<Device> findAllByHouseId(Long houseId);
 
     List<Device> findAllByActiveAndHouseId(Boolean active, Long houseId);
+
+    List<Device> findAllByDeviceTypeAndHouseId(DeviceType deviceType, Long houseId);
 }
