@@ -7,27 +7,51 @@
     tools:context=".fragment.MainFragment">
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginEnd="8dp"
-        app:backgroundTint="@android:color/holo_green_light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_popup_sync" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="74dp"
+        android:layout_height="68dp"
+        android:layout_gravity="bottom|right">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginEnd="8dp"
-        app:backgroundTint="@android:color/holo_green_light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="75dp"
+            android:layout_height="54dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="@android:color/holo_green_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="74dp"
+        android:layout_height="68dp"
+        android:layout_gravity="bottom|left">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="65dp"
+            android:layout_height="55dp"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:backgroundTint="@android:color/holo_green_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_popup_sync" />
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -59,7 +83,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="sd0"
+                android:text="12.3"
                 android:textAlignment="viewStart"
                 android:textColor="@android:color/background_light"
                 android:textSize="36sp"
@@ -82,10 +106,10 @@
                 android:src="@drawable/ic_degrees"
                 app:layout_constraintBottom_toBottomOf="@+id/tvCurrentTemperature"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.16"
+                app:layout_constraintHorizontal_bias="0.23"
                 app:layout_constraintStart_toStartOf="@+id/tvCurrentTemperature"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.53" />
+                app:layout_constraintVertical_bias="0.58000004" />
 
             <TextView
                 android:id="@+id/tvUserTemperature"
@@ -117,10 +141,10 @@
                 android:src="@drawable/ic_degrees"
                 app:layout_constraintBottom_toBottomOf="@+id/tvUserTemperature"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.63"
+                app:layout_constraintHorizontal_bias="0.71"
                 app:layout_constraintStart_toStartOf="@+id/tvUserTemperature"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.82" />
+                app:layout_constraintVertical_bias="0.84000003" />
 
             <ImageView
                 android:id="@+id/ivTemperatureStatus"

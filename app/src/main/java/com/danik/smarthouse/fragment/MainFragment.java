@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.danik.smarthouse.R;
 import com.danik.smarthouse.model.Device;
 import com.danik.smarthouse.model.Temperature;
-import com.danik.smarthouse.model.enums.DeviceType;
 import com.danik.smarthouse.service.AndroidService;
 import com.danik.smarthouse.service.DeviceService;
 import com.danik.smarthouse.service.HouseService;
@@ -65,19 +64,31 @@ public class MainFragment extends Fragment {
             if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getTemperature()) {
                 ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_ice);
                 tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getTemperature() + " ...");
-                for (Device device: deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
+                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
                     androidService.changeActive(device.getId(), true);
+                }
+                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
+                    androidService.changeActive(device.getId(), false);
                 }
             } else {
                 ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_sun);
                 tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getTemperature() + " ...");
-                for (Device device: deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
+                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
                     androidService.changeActive(device.getId(), true);
+                }
+                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
+                    androidService.changeActive(device.getId(), false);
                 }
             }
             if (Temperature.getInstance().getTemperatureC().equals(UserDetails.user.getTemperature())) {
                 ivTemperatureStatus.setVisibility(View.INVISIBLE);
                 tvTemperatureStatus.setText("Температура в нормі");
+                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
+                    androidService.changeActive(device.getId(), false);
+                }
+                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
+                    androidService.changeActive(device.getId(), false);
+                }
             }
             List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
             for (Device device : devices) {
@@ -86,19 +97,17 @@ public class MainFragment extends Fragment {
 
         }
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onButtonPressed(R.id.main_frame);
-            }
+        fab.setOnClickListener(v -> {
+            Log.i("listen", "in fab");
+            onButtonPressed(R.id.main_frame);
         });
-        FloatingActionButton fab2 = view.findViewById(R.id.fab2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().recreate();
-            }
-        });
+//        FloatingActionButton fab2 = view.findViewById(R.id.fab2);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().recreate();
+//            }
+//        });
 
 //        scheduler= Executors.newSingleThreadScheduledExecutor();
 //        textView = view.findViewById(R.id.onlinestatus);

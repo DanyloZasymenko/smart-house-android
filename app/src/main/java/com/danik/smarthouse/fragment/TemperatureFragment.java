@@ -11,11 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.danik.smarthouse.R;
+import com.danik.smarthouse.model.User;
+import com.danik.smarthouse.service.UserService;
+import com.danik.smarthouse.service.impl.UserServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 public class TemperatureFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
+    private UserService userService = new UserServiceImpl();
 
     public TemperatureFragment() {
     }
@@ -37,6 +42,13 @@ public class TemperatureFragment extends Fragment {
         Button bSaveTemperature = view.findViewById(R.id.bSaveTemperature);
         bSaveTemperature.setOnClickListener(view1 -> {
             UserDetails.user.setTemperature(Float.parseFloat(etSaveTemperature.getText().toString()));
+            User user = UserDetails.user;
+            userService.update(user.getId(),
+                    user.getName(),
+                    user.getMiddleName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getTemperature());
             this.getActivity().recreate();
         });
         return view;
