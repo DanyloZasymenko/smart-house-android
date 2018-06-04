@@ -65,13 +65,13 @@ public class MainFragment extends Fragment {
             if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getTemperature()) {
                 ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_ice);
                 tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getTemperature() + " ...");
-                for (Device device: deviceService.findAllByDeviceTypeAndHouseId(DeviceType.CLIMATE_CONDITIONING, UserDetails.user.getHouse().getId())) {
+                for (Device device: deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
                     androidService.changeActive(device.getId(), true);
                 }
             } else {
                 ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_sun);
                 tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getTemperature() + " ...");
-                for (Device device: deviceService.findAllByDeviceTypeAndHouseId(DeviceType.CLIMATE_HEAT, UserDetails.user.getHouse().getId())) {
+                for (Device device: deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
                     androidService.changeActive(device.getId(), true);
                 }
             }

@@ -23,5 +23,5 @@ public interface DeviceService {
 
     List<Device> findAllByActiveAndHouseId(Boolean active, Long houseId);
 
-    List<Device> findAllByDeviceTypeAndHouseId(DeviceType deviceType, Long houseId);
+    List<Device> findAllByDeviceTypeAndHouseId(String deviceTypeName, Long houseId);
 }

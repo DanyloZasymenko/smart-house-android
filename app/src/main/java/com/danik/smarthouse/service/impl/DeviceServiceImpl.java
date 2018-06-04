@@ -1,6 +1,7 @@
 package com.danik.smarthouse.service.impl;
 
 import com.danik.smarthouse.model.Device;
+import com.danik.smarthouse.model.enums.DeviceType;
 import com.danik.smarthouse.service.DeviceService;
 import com.danik.smarthouse.service.utils.HttpClient;
 import com.danik.smarthouse.service.utils.JsonMapper;
@@ -175,9 +176,9 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> findAllByDeviceTypeAndHouseId(Integer deviceTypeNumber, Long houseId) {
+    public List<Device> findAllByDeviceTypeAndHouseId(String deviceTypeName, Long houseId) {
         String response = "";
-        uri = "/find-all-by-device-type-and-house-id/" + deviceTypeNumber + "/" + houseId;
+        uri = "/find-all-by-device-type-and-house-id/" + deviceTypeName + "/" + houseId;
         method = "GET";
         body = new HashMap<>();
         headers = new HashMap<>();
