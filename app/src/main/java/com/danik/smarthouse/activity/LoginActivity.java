@@ -319,6 +319,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.e("user", UserDetails.accessToken.toString());
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             } finally {
                 if (connection != null) {
                     connection.disconnect();

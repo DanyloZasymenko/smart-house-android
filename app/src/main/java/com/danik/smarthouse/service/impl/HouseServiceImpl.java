@@ -74,10 +74,11 @@ public class HouseServiceImpl implements HouseService {
         httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
         try {
             response = httpClient.execute().get();
-        } catch (InterruptedException | ExecutionException e) {
+            return response.equals("true");
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return response.equals("true");
     }
 
     @Override

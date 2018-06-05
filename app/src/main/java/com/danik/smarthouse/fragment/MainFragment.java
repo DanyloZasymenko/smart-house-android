@@ -37,13 +37,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MainFragment extends Fragment {
-         Handler mHandler = new Handler();
+    Handler mHandler = new Handler();
     TextView textView;
     private DeviceService deviceService = new DeviceServiceImpl();
     private HouseService houseService = new HouseServiceImpl();
     private AndroidService androidService = new AndroidServiceImpl();
     private OnFragmentInteractionListener mListener;
-        private Thread mUiThread;
+    private Thread mUiThread;
     private ScheduledExecutorService scheduler;
 
     public static MainFragment newInstance() {
@@ -66,47 +66,58 @@ public class MainFragment extends Fragment {
         TextView tvTemperatureStatus = view.findViewById(R.id.tvTemperatureStatus);
         TextView tvUserTemperature = view.findViewById(R.id.tvUserTemperature);
         TextView tvCurrentTemperature = view.findViewById(R.id.tvCurrentTemperature);
+        tvTemperatureStatus.setVisibility(View.INVISIBLE);
+        ivTemperatureStatus.setVisibility(View.INVISIBLE);
         if (UserDetails.user != null) {
             tvUserTemperature.setText(UserDetails.user.getTemperature().toString());
-            String text = Temperature.getInstance().getTemperatureC().toString();
-            Log.e("text", text);
-            tvCurrentTemperature.setText(text);
-            if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getTemperature()) {
-                ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_ice);
-                tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getTemperature() + " ...");
-                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
-                    androidService.changeActive(device.getId(), true);
+            try {
+                String text = Temperature.getInstance().getTemperatureC().toString();
+                Log.e("text", text);
+                tvCurrentTemperature.setText(text);
+                if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getTemperature()) {
+                    ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_ice);
+                    tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getTemperature() + " ...");
+                    tvTemperatureStatus.setVisibility(View.VISIBLE);
+                    ivTemperatureStatus.setVisibility(View.VISIBLE);
+                    for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
+                        androidService.changeActive(device.getId(), true);
+                    }
+                    for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
+                        androidService.changeActive(device.getId(), false);
+                    }
+                } else {
+                    ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_sun);
+                    tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getTemperature() + " ...");
+                    tvTemperatureStatus.setVisibility(View.VISIBLE);
+                    ivTemperatureStatus.setVisibility(View.VISIBLE);
+                    for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
+                        androidService.changeActive(device.getId(), true);
+                    }
+                    for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
+                        androidService.changeActive(device.getId(), false);
+                    }
                 }
-                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
-                    androidService.changeActive(device.getId(), false);
+                if (Temperature.getInstance().getTemperatureC().equals(UserDetails.user.getTemperature())) {
+                    ivTemperatureStatus.setVisibility(View.INVISIBLE);
+                    tvTemperatureStatus.setText("Температура в нормі");
+                    tvTemperatureStatus.setVisibility(View.VISIBLE);
+                    for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
+                        androidService.changeActive(device.getId(), false);
+                    }
+                    for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
+                        androidService.changeActive(device.getId(), false);
+                    }
                 }
-            } else {
-                ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_sun);
-                tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getTemperature() + " ...");
-                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
-                    androidService.changeActive(device.getId(), true);
+                List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
+                for (Device device : devices) {
+                    devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
                 }
-                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
-                    androidService.changeActive(device.getId(), false);
-                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            if (Temperature.getInstance().getTemperatureC().equals(UserDetails.user.getTemperature())) {
-                ivTemperatureStatus.setVisibility(View.INVISIBLE);
-                tvTemperatureStatus.setText("Температура в нормі");
-                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
-                    androidService.changeActive(device.getId(), false);
-                }
-                for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
-                    androidService.changeActive(device.getId(), false);
-                }
-            }
-            List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
-            for (Device device : devices) {
-                devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
-            }
-
         }
         FloatingActionButton fab = view.findViewById(R.id.fab);
+        FloatingActionButton fab2 = view.findViewById(R.id.fab2);
         fab.setOnClickListener(v -> {
             Log.i("listen", "in fab");
             onButtonPressed(R.id.main_frame);
@@ -129,7 +140,7 @@ public class MainFragment extends Fragment {
 //            }
 //        });
 
-         mHandler = new Handler(Looper.getMainLooper()) {
+        mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -137,65 +148,75 @@ public class MainFragment extends Fragment {
             }
         };
 
-         runOnUiThread(new Runnable(){
-             @Override
-             public void run() {
-                 System.out.println("0000000000000000000000000000");
-             }
-         });
-// start copy
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            Boolean firstActive = true;
+        runOnUiThread(new Runnable() {
+            @Override
             public void run() {
-                while(true){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println("111111111111111111111111");
-                            if (!firstActive && !houseService.getStatus()) {
-                                generalLayout.setVisibility(View.INVISIBLE);
-                                devicesLayout.setVisibility(View.INVISIBLE);
-                                notFindLayout.setVisibility(View.VISIBLE);
-                                progressBar.animate().setDuration(1000).alpha(1).setListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        progressBar.setVisibility(View.VISIBLE);
-                                    }
-                                });
-                            }else{
-                                generalLayout.setVisibility(View.VISIBLE);
-                                devicesLayout.setVisibility(View.VISIBLE);
-                                System.out.println("+++++++++++++++++++++++++++++");
-                                notFindLayout.setVisibility(View.INVISIBLE);
-                                tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
-                                firstActive=true;
+                System.out.println("0000000000000000000000000000");
+            }
+        });
+// start copy
+        try {
+            final Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                Boolean firstActive = true;
+
+                public void run() {
+                    while (true) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                System.out.println("111111111111111111111111");
+                                if (!firstActive && !houseService.getStatus()) {
+                                    generalLayout.setVisibility(View.INVISIBLE);
+                                    devicesLayout.setVisibility(View.INVISIBLE);
+                                    fab.setVisibility(View.INVISIBLE);
+                                    fab2.setVisibility(View.INVISIBLE);
+                                    notFindLayout.setVisibility(View.VISIBLE);
+                                    progressBar.animate().setDuration(1000).alpha(1).setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            progressBar.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                                } else {
+                                    generalLayout.setVisibility(View.VISIBLE);
+                                    fab.setVisibility(View.VISIBLE);
+                                    fab2.setVisibility(View.VISIBLE);
+                                    devicesLayout.setVisibility(View.VISIBLE);
+                                    System.out.println("+++++++++++++++++++++++++++++");
+                                    notFindLayout.setVisibility(View.INVISIBLE);
+                                    tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
+                                    firstActive = true;
+                                }
                             }
+                        });
+                        firstActive = false;
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    });
-                    firstActive = false;
-                    try {
-                        Thread.sleep(5000);
-                    }catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
-        };
-        new Thread(runnable).start();
+            };
+            new Thread(runnable).start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 // end copy
 
-            scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler = Executors.newSingleThreadScheduledExecutor();
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 scheduler.scheduleAtFixedRate(() -> {
-                        System.out.println("-------------------------");
+                    System.out.println("-------------------------");
                 }, 0, 5, TimeUnit.SECONDS);
 
             }
         });
         return view;
     }
+
     public final void runOnUiThread(Runnable action) {
         if (Thread.currentThread() != mUiThread) {
             mHandler.post(action);
@@ -203,6 +224,7 @@ public class MainFragment extends Fragment {
             action.run();
         }
     }
+
     @Override
     public void onDestroyView() {
 //        scheduler.shutdown();
