@@ -8,6 +8,7 @@ import com.danik.smarthouse.service.utils.HttpClient;
 import com.danik.smarthouse.service.utils.JsonMapper;
 import com.danik.smarthouse.service.utils.Url;
 import com.danik.smarthouse.service.utils.UserDetails;
+import com.danik.smarthouse.service.utils.model.Authorization;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,32 @@ public class UserServiceImpl implements UserService {
         }
         try {
             return JsonMapper.parseJSON(response, User.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Authorization login(String email, String password) {
+        String response = "";
+        uri = Url.url + "/oauth/token";
+        method = "POST";
+        body = new HashMap<>();
+        body.put("username", email);
+        body.put("password", password);
+        body.put("grant_type", "password");
+        headers = new HashMap<>();
+        headers.put("Authorization", "Basic Y2xpZW50X2d1aWxkX29mX3RlYWNoZXJzLmNvbTpzZWNyZXRfMDEwc2VydmVyLmNvbQ==");
+        httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
+        try {
+            response = httpClient.execute().get();
+            Log.i("response", response);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            return JsonMapper.parseJSON(response, Authorization.class);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -38,7 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static java.security.AccessController.getContext;
 import static java.util.Optional.ofNullable;
 
 public class MainActivity extends AppCompatActivity
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     Temperature.getInstance().setValues(androidService.getTemperature());
                     Log.i("temperature", Temperature.getInstance().toString());
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }, 0, 10, TimeUnit.SECONDS);
@@ -107,7 +105,13 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            int count = getFragmentManager().getBackStackEntryCount();
+
+            if (count == 0) {
+                super.onBackPressed();
+            } else {
+                getFragmentManager().popBackStack();
+            }
         }
     }
 
@@ -143,8 +147,8 @@ public class MainActivity extends AppCompatActivity
             changeFragment(R.id.main_frame, MainFragment.newInstance());
 //        } else if (id == R.id.nav_my_devices) {
 //            changeFragment(R.id.main_frame, MyDevicesFragment.newInstance());
-//        } else if (id == R.id.nav_settings) {
-//            changeFragment(R.id.main_frame, SettingsFragment.newInstance("", ""));
+        } else if (id == R.id.nav_settings) {
+            changeFragment(R.id.main_frame, SettingsFragment.newInstance());
         } else if (id == R.id.nav_exit) {
             UserDetails.logout();
             this.recreate();

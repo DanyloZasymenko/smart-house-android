@@ -88,24 +88,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+        mEmailSignInButton.setOnClickListener(view -> attemptLogin());
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
         Button register = (Button) findViewById(R.id.bRegister);
-        register.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginActivity.this.startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-            }
-        });
+        register.setOnClickListener(v -> LoginActivity.this.startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
     }
 
     private void populateAutoComplete() {

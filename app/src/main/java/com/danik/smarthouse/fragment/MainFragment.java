@@ -122,23 +122,9 @@ public class MainFragment extends Fragment {
             Log.i("listen", "in fab");
             onButtonPressed(R.id.main_frame);
         });
-//        FloatingActionButton fab2 = view.findViewById(R.id.fab2);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getActivity().recreate();
-//            }
-//        });
+        fab2.setOnClickListener(v -> getActivity().recreate());
 
         ProgressBar progressBar = view.findViewById(R.id.progressBar);
-//        progressBar.setVisibility(true ? View.VISIBLE : View.GONE);
-//        progressBar.animate().setDuration(1000).alpha(
-//                true ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                progressBar.setVisibility(true ? View.VISIBLE : View.GONE);
-//            }
-//        });
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -148,12 +134,7 @@ public class MainFragment extends Fragment {
             }
         };
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("0000000000000000000000000000");
-            }
-        });
+        runOnUiThread(() -> System.out.println("0000000000000000000000000000"));
 // start copy
         try {
             final Handler handler = new Handler();
@@ -192,7 +173,7 @@ public class MainFragment extends Fragment {
                         });
                         firstActive = false;
                         try {
-                            Thread.sleep(5000);
+                            Thread.sleep(15000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
