@@ -1,7 +1,6 @@
 package com.danik.smarthouse.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -14,12 +13,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.danik.smarthouse.R;
-import com.danik.smarthouse.activity.LoginActivity;
 import com.danik.smarthouse.service.HouseService;
 import com.danik.smarthouse.service.UserService;
 import com.danik.smarthouse.service.impl.HouseServiceImpl;
 import com.danik.smarthouse.service.impl.UserServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
+
+import java.util.Objects;
 
 public class SettingsFragment extends Fragment {
 
@@ -53,11 +53,15 @@ public class SettingsFragment extends Fragment {
         EditText etHouseNameSettings = view.findViewById(R.id.etHouseNameSettings);
         Button bUpdateHouse = view.findViewById(R.id.bUpdateHouse);
 
-        etName.setText(UserDetails.user.getName());
-        etMiddleName.setText(UserDetails.user.getMiddleName());
-        etLastName.setText(UserDetails.user.getLastName());
-        etEmail.setText(UserDetails.user.getEmail());
-        etHouseNameSettings.setText(UserDetails.user.getHouse().getName());
+        try {
+            etName.setText(UserDetails.user.getName());
+            etMiddleName.setText(UserDetails.user.getMiddleName());
+            etLastName.setText(UserDetails.user.getLastName());
+            etEmail.setText(UserDetails.user.getEmail());
+            etHouseNameSettings.setText(UserDetails.user.getHouse().getName());
+        } catch (Exception e) {
+
+        }
 
         ConstraintLayout houseUpdateLayout = view.findViewById(R.id.houseUpdateLayout);
         ConstraintLayout userUpdateLayout = view.findViewById(R.id.userUpdateLayout);
@@ -76,15 +80,14 @@ public class SettingsFragment extends Fragment {
 
         bUpdateUser.setOnClickListener(view1 -> {
             try {
-                UserDetails.user = userService.update(UserDetails.user.getId(),
+                userService.update(UserDetails.user.getId(),
                         etName.getText().toString(),
                         etMiddleName.getText().toString(),
                         etLastName.getText().toString(),
                         etEmail.getText().toString(),
                         UserDetails.user.getTemperature());
                 UserDetails.logout();
-                UserDetails.accessToken = userService.login(UserDetails.user.getEmail(), UserDetails.user.getPassword()).getAccess_token();
-                getActivity().recreate();
+                Objects.requireNonNull(getActivity()).recreate();
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "Вибачте, сталася помилка", Toast.LENGTH_SHORT).show();
@@ -103,7 +106,6 @@ public class SettingsFragment extends Fragment {
         });
         return view;
     }
-
 
 
     public void onButtonPressed(Uri uri) {
