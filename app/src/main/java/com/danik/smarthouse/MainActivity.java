@@ -18,8 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.danik.smarthouse.activity.LoginActivity;
+import com.danik.smarthouse.fragment.AlertFragment;
 import com.danik.smarthouse.fragment.MainFragment;
 import com.danik.smarthouse.fragment.MyDevicesFragment;
 import com.danik.smarthouse.fragment.NewDeviceFragment;
@@ -28,6 +30,7 @@ import com.danik.smarthouse.fragment.NewUserDataFragment;
 import com.danik.smarthouse.fragment.OneDeviceMyDevicesFragment;
 import com.danik.smarthouse.fragment.SettingsFragment;
 import com.danik.smarthouse.fragment.TemperatureFragment;
+import com.danik.smarthouse.model.AlertButtons;
 import com.danik.smarthouse.model.Temperature;
 import com.danik.smarthouse.service.AndroidService;
 import com.danik.smarthouse.service.impl.AndroidServiceImpl;
@@ -48,7 +51,8 @@ public class MainActivity extends AppCompatActivity
         NewDeviceFragment.OnFragmentInteractionListener,
         OneDeviceMyDevicesFragment.OnFragmentInteractionListener,
         NewUserDataFragment.OnFragmentInteractionListener,
-        TemperatureFragment.OnFragmentInteractionListener {
+        TemperatureFragment.OnFragmentInteractionListener,
+        AlertFragment.OnFragmentInteractionListener{
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -146,10 +150,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_main) {
             changeFragment(R.id.main_frame, MainFragment.newInstance());
-//        } else if (id == R.id.nav_my_devices) {
-//            changeFragment(R.id.main_frame, MyDevicesFragment.newInstance());
         } else if (id == R.id.nav_settings) {
             changeFragment(R.id.main_frame, SettingsFragment.newInstance());
+                    } else if (id == R.id.nav_alert) {
+            changeFragment(R.id.main_frame, AlertFragment.newInstance());
         } else if (id == R.id.nav_exit) {
             UserDetails.logout();
             this.recreate();

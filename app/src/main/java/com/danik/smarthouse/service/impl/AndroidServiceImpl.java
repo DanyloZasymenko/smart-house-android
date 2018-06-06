@@ -1,5 +1,6 @@
 package com.danik.smarthouse.service.impl;
 
+import com.danik.smarthouse.model.AlertButtons;
 import com.danik.smarthouse.model.Device;
 import com.danik.smarthouse.model.Temperature;
 import com.danik.smarthouse.service.AndroidService;
@@ -62,16 +63,41 @@ public class AndroidServiceImpl implements AndroidService {
         return JsonMapper.parseJSON(response, Temperature.class);
     }
 
-    private String get(String uri, Map<String, String> args, Map<String, String> headers) {
+    @Override
+    public AlertButtons checkAlert() {
         String response = "";
-        uri = uri;
-        method = "POST";
-        httpClient = new HttpClient(SERVER_URL + uri, method, args, headers);
+        uri = "/check-alert";
+        method = "GET";
+        body = new HashMap<>();
+        headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + UserDetails.accessToken);
+        headers.put("Content-Type", "application/json; charset=UTF-8");
+        httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
         try {
             response = httpClient.execute().get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        return response;
+        return JsonMapper.parseJSON(response, AlertButtons.class);
+    }
+
+    @Override
+    public AlertButtons alert(Boolean fire, Boolean police) {
+        String response = "";
+        uri = "/alert";
+        method = "POST";
+        body = new HashMap<>();
+        body.put("fire", fire.toString());
+        body.put("police", police.toString());
+        headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + UserDetails.accessToken);
+        headers.put("Content-Type", "application/json; charset=UTF-8");
+        httpClient = new HttpClient(SERVER_URL + uri, method, body, headers);
+        try {
+            response = httpClient.execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return JsonMapper.parseJSON(response, AlertButtons.class);
     }
 }

@@ -19,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.danik.smarthouse.R;
+import com.danik.smarthouse.model.AlertButtons;
 import com.danik.smarthouse.model.Device;
 import com.danik.smarthouse.model.Temperature;
 import com.danik.smarthouse.service.AndroidService;
@@ -32,6 +34,7 @@ import com.danik.smarthouse.service.impl.HouseServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -143,32 +146,29 @@ public class MainFragment extends Fragment {
 
                 public void run() {
                     while (true) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("111111111111111111111111");
-                                if (!firstActive && !houseService.getStatus()) {
-                                    generalLayout.setVisibility(View.INVISIBLE);
-                                    devicesLayout.setVisibility(View.INVISIBLE);
-                                    fab.setVisibility(View.INVISIBLE);
-                                    fab2.setVisibility(View.INVISIBLE);
-                                    notFindLayout.setVisibility(View.VISIBLE);
-                                    progressBar.animate().setDuration(1000).alpha(1).setListener(new AnimatorListenerAdapter() {
-                                        @Override
-                                        public void onAnimationEnd(Animator animation) {
-                                            progressBar.setVisibility(View.VISIBLE);
-                                        }
-                                    });
-                                } else {
-                                    generalLayout.setVisibility(View.VISIBLE);
-                                    fab.setVisibility(View.VISIBLE);
-                                    fab2.setVisibility(View.VISIBLE);
-                                    devicesLayout.setVisibility(View.VISIBLE);
-                                    System.out.println("+++++++++++++++++++++++++++++");
-                                    notFindLayout.setVisibility(View.INVISIBLE);
-                                    tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
-                                    firstActive = true;
-                                }
+                        handler.post(() -> {
+                            System.out.println("111111111111111111111111");
+                            if (!firstActive && !houseService.getStatus()) {
+                                generalLayout.setVisibility(View.INVISIBLE);
+                                devicesLayout.setVisibility(View.INVISIBLE);
+                                fab.setVisibility(View.INVISIBLE);
+                                fab2.setVisibility(View.INVISIBLE);
+                                notFindLayout.setVisibility(View.VISIBLE);
+                                progressBar.animate().setDuration(1000).alpha(1).setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        progressBar.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            } else {
+                                generalLayout.setVisibility(View.VISIBLE);
+                                fab.setVisibility(View.VISIBLE);
+                                fab2.setVisibility(View.VISIBLE);
+                                devicesLayout.setVisibility(View.VISIBLE);
+                                System.out.println("+++++++++++++++++++++++++++++");
+                                notFindLayout.setVisibility(View.INVISIBLE);
+                                tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
+                                firstActive = true;
                             }
                         });
                         firstActive = false;
@@ -187,14 +187,20 @@ public class MainFragment extends Fragment {
 // end copy
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                scheduler.scheduleAtFixedRate(() -> {
-                    System.out.println("-------------------------");
-                }, 0, 5, TimeUnit.SECONDS);
-
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> scheduler.scheduleAtFixedRate(() -> {
+            try {
+                AlertButtons.getInstance().setValues(androidService.checkAlert());
+                Log.i("alert", AlertButtons.getInstance().toString());
+                if(AlertButtons.getInstance().getFire()){
+                    Toast.makeText(getContext(), "Спрацювала пожежна сигналізація!", Toast.LENGTH_SHORT).show();
+                }
+                if(AlertButtons.getInstance().getPolice()){
+                    Toast.makeText(getContext(), "Спрацювала тривожна кнопка!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }, 0, 1, TimeUnit.SECONDS));
         return view;
     }
 
