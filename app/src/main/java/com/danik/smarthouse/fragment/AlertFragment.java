@@ -35,7 +35,7 @@ public class AlertFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alert, container, false);
-        view.findViewById(R.id.ivPolice).setOnClickListener(view1 -> {
+        view.findViewById(R.id.ivFire).setOnClickListener(view1 -> {
             androidService.alert(true, false);
         });
         view.findViewById(R.id.ivPolice).setOnClickListener(view1 -> {
