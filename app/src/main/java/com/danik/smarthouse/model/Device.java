@@ -71,12 +71,17 @@ public class Device {
 
     @Override
     public String toString() {
-        return "Device{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", pin=" + pin +
-                ", deviceType=" + deviceType +
-                ", active=" + active +
-                '}';
+        return name;
     }
+
+    //    @Override
+//    public String toString() {
+//        return "Device{" +
+//                "id=" + id +
+//                ", name='" + name + '\'' +
+//                ", pin=" + pin +
+//                ", deviceType=" + deviceType +
+//                ", active=" + active +
+//                '}';
+//    }
 }

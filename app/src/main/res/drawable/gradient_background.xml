@@ -13,10 +13,10 @@
 
     <gradient
         android:type="linear"
-        android:startColor="#99cc00"
+        android:startColor="@color/mainLight"
         android:centerX="0.9"
         android:centerY="1.2"
-        android:endColor="#669900">
+        android:endColor="@color/mainDark">
     </gradient>
 
 

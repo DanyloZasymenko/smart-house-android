@@ -16,6 +16,8 @@ public class House {
     private Boolean active;
     private Boolean online;
     private Timestamp dateOnline;
+    private Float temperature;
+    private Float humidity;
     private List<Device> devices;
     private List<User> users;
 
@@ -64,6 +66,24 @@ public class House {
         return this;
     }
 
+    public Float getTemperature() {
+        return temperature;
+    }
+
+    public House setTemperature(Float temperature) {
+        this.temperature = temperature;
+        return this;
+    }
+
+    public Float getHumidity() {
+        return humidity;
+    }
+
+    public House setHumidity(Float humidity) {
+        this.humidity = humidity;
+        return this;
+    }
+
     public List<Device> getDevices() {
         return devices;
     }
@@ -100,6 +120,9 @@ public class House {
                 ", serial='" + serial + '\'' +
                 ", active=" + active +
                 ", online=" + online +
+                ", dateOnline=" + dateOnline +
+                ", temperature=" + temperature +
+                ", humidity=" + humidity +
                 ", devices=" + devices.stream().map(Device::getId).collect(toList()) +
                 ", users=" + users.stream().map(User::getId).collect(toList()) +
                 '}';

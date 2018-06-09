@@ -11,16 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.danik.smarthouse.R;
-import com.danik.smarthouse.model.User;
-import com.danik.smarthouse.service.UserService;
-import com.danik.smarthouse.service.impl.UserServiceImpl;
+import com.danik.smarthouse.model.House;
+import com.danik.smarthouse.service.HouseService;
+import com.danik.smarthouse.service.impl.HouseServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 public class TemperatureFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private UserService userService = new UserServiceImpl();
+    private HouseService houseService = new HouseServiceImpl();
 
     public TemperatureFragment() {
     }
@@ -39,16 +39,25 @@ public class TemperatureFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_temperature, container, false);
         EditText etSaveTemperature = view.findViewById(R.id.etSaveTemperature);
+        EditText etSaveHumidity = view.findViewById(R.id.etSaveHumidity);
         Button bSaveTemperature = view.findViewById(R.id.bSaveTemperature);
+
+        try {
+            etSaveTemperature.setText(UserDetails.user.getHouse().getTemperature().toString());
+            etSaveHumidity.setText(UserDetails.user.getHouse().getHumidity().toString());
+        } catch (Exception e) {
+
+        }
+
         bSaveTemperature.setOnClickListener(view1 -> {
-            UserDetails.user.setTemperature(Float.parseFloat(etSaveTemperature.getText().toString()));
-            User user = UserDetails.user;
-            userService.update(user.getId(),
-                    user.getName(),
-                    user.getMiddleName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getTemperature());
+            UserDetails.user.getHouse().setTemperature(Float.parseFloat(etSaveTemperature.getText().toString()));
+            UserDetails.user.getHouse().setHumidity(Float.parseFloat(etSaveHumidity.getText().toString()));
+            House house = UserDetails.user.getHouse();
+            houseService.update(house.getId(),
+                    house.getName(),
+                    house.getSerial(),
+                    house.getTemperature(),
+                    house.getHumidity());
             this.getActivity().recreate();
         });
         return view;

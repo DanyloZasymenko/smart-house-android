@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -23,11 +24,8 @@ import android.widget.Toast;
 import com.danik.smarthouse.activity.LoginActivity;
 import com.danik.smarthouse.fragment.AlertFragment;
 import com.danik.smarthouse.fragment.MainFragment;
-import com.danik.smarthouse.fragment.MyDevicesFragment;
 import com.danik.smarthouse.fragment.NewDeviceFragment;
 import com.danik.smarthouse.fragment.NewHouseFragment;
-import com.danik.smarthouse.fragment.NewUserDataFragment;
-import com.danik.smarthouse.fragment.OneDeviceMyDevicesFragment;
 import com.danik.smarthouse.fragment.SettingsFragment;
 import com.danik.smarthouse.fragment.TemperatureFragment;
 import com.danik.smarthouse.model.AlertButtons;
@@ -36,6 +34,7 @@ import com.danik.smarthouse.service.AndroidService;
 import com.danik.smarthouse.service.impl.AndroidServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -45,14 +44,11 @@ import static java.util.Optional.ofNullable;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnFragmentInteractionListener,
-        MyDevicesFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
         NewHouseFragment.OnFragmentInteractionListener,
         NewDeviceFragment.OnFragmentInteractionListener,
-        OneDeviceMyDevicesFragment.OnFragmentInteractionListener,
-        NewUserDataFragment.OnFragmentInteractionListener,
         TemperatureFragment.OnFragmentInteractionListener,
-        AlertFragment.OnFragmentInteractionListener{
+        AlertFragment.OnFragmentInteractionListener {
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -98,8 +94,41 @@ public class MainActivity extends AppCompatActivity
             changeFragment(R.id.main_frame, MainFragment.newInstance());
             tvUserName.setText(UserDetails.user.getName() + " " + UserDetails.user.getMiddleName() + " " + UserDetails.user.getLastName());
             tvHouseName.setText(UserDetails.user.getHouse().getName());
-        }
 
+            scheduler = Executors.newSingleThreadScheduledExecutor();
+            Objects.requireNonNull(this).runOnUiThread(() -> scheduler.scheduleAtFixedRate(() -> {
+                try {
+                    AlertButtons.getInstance().setValues(androidService.checkAlert());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }, 0, 1, TimeUnit.SECONDS));
+
+            try {
+                final Handler handler = new Handler();
+                Runnable runnable = () -> {
+                    while (true) {
+                        handler.post(() -> {
+                            AlertButtons.getInstance().setValues(androidService.checkAlert());
+                            if (AlertButtons.getInstance().getFire()) {
+                                Toast.makeText(this, "Спрацювала пожежна сигналізація!", Toast.LENGTH_SHORT).show();
+                            }
+                            if (AlertButtons.getInstance().getPolice()) {
+                                Toast.makeText(this, "Спрацювала тривожна кнопка!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        try {
+                            Thread.sleep(4000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                new Thread(runnable).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -152,7 +181,7 @@ public class MainActivity extends AppCompatActivity
             changeFragment(R.id.main_frame, MainFragment.newInstance());
         } else if (id == R.id.nav_settings) {
             changeFragment(R.id.main_frame, SettingsFragment.newInstance());
-                    } else if (id == R.id.nav_alert) {
+        } else if (id == R.id.nav_alert) {
             changeFragment(R.id.main_frame, AlertFragment.newInstance());
         } else if (id == R.id.nav_exit) {
             UserDetails.logout();
@@ -182,11 +211,5 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Integer id) {
         changeFragment(id, NewDeviceFragment.newInstance());
     }
-
-    public void moveToNewUserData() {
-        Log.i("move", "in move");
-        changeFragment(R.id.main_frame, NewUserDataFragment.newInstance());
-    }
-
 
 }

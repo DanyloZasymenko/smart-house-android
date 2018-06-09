@@ -73,7 +73,11 @@ public class NewHouseFragment extends Fragment {
         });
         bSendName.setOnClickListener(v -> {
             House house = UserDetails.user.getHouse();
-            UserDetails.user.setHouse(houseService.update(house.getId(), etFillInName.getText().toString(), house.getSerial()));
+            UserDetails.user.setHouse(houseService.update(house.getId(),
+                    etFillInName.getText().toString(),
+                    house.getSerial(),
+                    house.getTemperature(),
+                    house.getHumidity()));
             Objects.requireNonNull(this.getActivity()).recreate();
         });
         return view;

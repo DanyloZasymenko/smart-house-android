@@ -42,7 +42,7 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    public House update(Long id, String name, String serial) {
+    public House update(Long id, String name, String serial, Float temperature, Float humidity) {
         String response = "";
         uri = "/update";
         method = "POST";
@@ -50,6 +50,8 @@ public class HouseServiceImpl implements HouseService {
         body.put("id", id.toString());
         body.put("name", name);
         body.put("serial", serial);
+        body.put("temperature", temperature.toString());
+        body.put("humidity", humidity.toString());
         headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + UserDetails.accessToken);
         headers.put("Content-Type", "application/json; charset=UTF-8");

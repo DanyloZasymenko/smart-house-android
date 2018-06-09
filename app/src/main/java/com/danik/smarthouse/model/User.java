@@ -9,7 +9,6 @@ public class User {
     private String middleName;
     private String lastName;
     private House house;
-    private Float temperature;
 
     public Long getId() {
         return id;
@@ -74,14 +73,6 @@ public class User {
         return this;
     }
 
-    public Float getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Float temperature) {
-        this.temperature = temperature;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -92,7 +83,6 @@ public class User {
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", house=" + (house == null ? "null" : house.getId()) +
-                ", temperature=" + temperature +
                 '}';
     }
 }

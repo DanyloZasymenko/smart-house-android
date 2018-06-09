@@ -8,7 +8,7 @@ public interface HouseService {
 
     House save(String name, String serial);
 
-    House update(Long id, String name, String serial);
+    House update(Long id, String name, String serial, Float temperature, Float humidity);
 
     Boolean getStatus();
 

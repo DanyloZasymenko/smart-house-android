@@ -19,10 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.danik.smarthouse.R;
-import com.danik.smarthouse.model.AlertButtons;
 import com.danik.smarthouse.model.Device;
 import com.danik.smarthouse.model.Temperature;
 import com.danik.smarthouse.service.AndroidService;
@@ -34,14 +32,10 @@ import com.danik.smarthouse.service.impl.HouseServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class MainFragment extends Fragment {
     Handler mHandler = new Handler();
-    TextView textView;
     private DeviceService deviceService = new DeviceServiceImpl();
     private HouseService houseService = new HouseServiceImpl();
     private AndroidService androidService = new AndroidServiceImpl();
@@ -69,17 +63,22 @@ public class MainFragment extends Fragment {
         TextView tvTemperatureStatus = view.findViewById(R.id.tvTemperatureStatus);
         TextView tvUserTemperature = view.findViewById(R.id.tvUserTemperature);
         TextView tvCurrentTemperature = view.findViewById(R.id.tvCurrentTemperature);
+        TextView tvCurrentHumidity = view.findViewById(R.id.tvCurrentHumidity);
+        TextView tvUserHumidity = view.findViewById(R.id.tvUserHumidity);
         tvTemperatureStatus.setVisibility(View.INVISIBLE);
         ivTemperatureStatus.setVisibility(View.INVISIBLE);
         if (UserDetails.user != null) {
-            tvUserTemperature.setText(UserDetails.user.getTemperature().toString());
+            tvUserTemperature.setText(UserDetails.user.getHouse().getTemperature().toString());
+            tvUserHumidity.setText(UserDetails.user.getHouse().getHumidity().toString() + "%");
             try {
-                String text = Temperature.getInstance().getTemperatureC().toString();
-                Log.e("text", text);
-                tvCurrentTemperature.setText(text);
-                if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getTemperature()) {
+                String temperature = Temperature.getInstance().getTemperatureC().toString();
+                String humidity = Temperature.getInstance().getHumidity().toString();
+                Log.e("temperature", temperature);
+                Log.e("humidity", humidity);
+                tvCurrentHumidity.setText(humidity + "%");
+                if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getHouse().getTemperature()) {
                     ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_ice);
-                    tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getTemperature() + " ...");
+                    tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getHouse().getTemperature() + " ...");
                     tvTemperatureStatus.setVisibility(View.VISIBLE);
                     ivTemperatureStatus.setVisibility(View.VISIBLE);
                     for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
@@ -90,7 +89,7 @@ public class MainFragment extends Fragment {
                     }
                 } else {
                     ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_sun);
-                    tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getTemperature() + " ...");
+                    tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getHouse().getTemperature() + " ...");
                     tvTemperatureStatus.setVisibility(View.VISIBLE);
                     ivTemperatureStatus.setVisibility(View.VISIBLE);
                     for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
@@ -100,7 +99,7 @@ public class MainFragment extends Fragment {
                         androidService.changeActive(device.getId(), false);
                     }
                 }
-                if (Temperature.getInstance().getTemperatureC().equals(UserDetails.user.getTemperature())) {
+                if (Temperature.getInstance().getTemperatureC().equals(UserDetails.user.getHouse().getTemperature())) {
                     ivTemperatureStatus.setVisibility(View.INVISIBLE);
                     tvTemperatureStatus.setText("Температура в нормі");
                     tvTemperatureStatus.setVisibility(View.VISIBLE);
@@ -115,7 +114,7 @@ public class MainFragment extends Fragment {
                 for (Device device : devices) {
                     devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -133,12 +132,9 @@ public class MainFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                System.out.println("=========================");
             }
         };
 
-        runOnUiThread(() -> System.out.println("0000000000000000000000000000"));
-// start copy
         try {
             final Handler handler = new Handler();
             Runnable runnable = new Runnable() {
@@ -147,7 +143,6 @@ public class MainFragment extends Fragment {
                 public void run() {
                     while (true) {
                         handler.post(() -> {
-                            System.out.println("111111111111111111111111");
                             if (!firstActive && !houseService.getStatus()) {
                                 generalLayout.setVisibility(View.INVISIBLE);
                                 devicesLayout.setVisibility(View.INVISIBLE);
@@ -165,9 +160,9 @@ public class MainFragment extends Fragment {
                                 fab.setVisibility(View.VISIBLE);
                                 fab2.setVisibility(View.VISIBLE);
                                 devicesLayout.setVisibility(View.VISIBLE);
-                                System.out.println("+++++++++++++++++++++++++++++");
                                 notFindLayout.setVisibility(View.INVISIBLE);
                                 tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
+                                tvCurrentHumidity.setText(Temperature.getInstance().getHumidity().toString() + "%");
                                 firstActive = true;
                             }
                         });
@@ -181,26 +176,10 @@ public class MainFragment extends Fragment {
                 }
             };
             new Thread(runnable).start();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-// end copy
 
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> scheduler.scheduleAtFixedRate(() -> {
-            try {
-                AlertButtons.getInstance().setValues(androidService.checkAlert());
-                Log.i("alert", AlertButtons.getInstance().toString());
-                if(AlertButtons.getInstance().getFire()){
-                    Toast.makeText(getContext(), "Спрацювала пожежна сигналізація!", Toast.LENGTH_SHORT).show();
-                }
-                if(AlertButtons.getInstance().getPolice()){
-                    Toast.makeText(getContext(), "Спрацювала тривожна кнопка!", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, 0, 1, TimeUnit.SECONDS));
         return view;
     }
 
@@ -217,21 +196,6 @@ public class MainFragment extends Fragment {
 //        scheduler.shutdown();
         super.onDestroyView();
     }
-
-//    public final void runOnUiThread(Runnable action) {
-//        while (true) {
-//            if (Thread.currentThread() != mUiThread) {
-//                mHandler.post(action);
-//            } else {
-//                action.run();
-//            }
-//            try {
-//                Thread.sleep(5000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
     public void onButtonPressed(Integer id) {
         if (mListener != null) {
