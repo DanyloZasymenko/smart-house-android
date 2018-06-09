@@ -116,52 +116,56 @@ public class SettingsFragment extends Fragment {
             deviceUpdateLayout.setVisibility(View.INVISIBLE);
         });
 
-        List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
+        try {
+            List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
+            if (devices.size() == 0) {
+                tvNotFound.setVisibility(View.VISIBLE);
+                spinnerAllDevices.setVisibility(View.INVISIBLE);
+            } else {
+                tvNotFound.setVisibility(View.INVISIBLE);
+                spinnerAllDevices.setVisibility(View.VISIBLE);
+                ArrayAdapter<Device> adapter = new ArrayAdapter<Device>(Objects.requireNonNull(getContext()),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        devices);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerAllDevices.setAdapter(adapter);
 
-        if (devices.size() == 0) {
-            tvNotFound.setVisibility(View.VISIBLE);
-            spinnerAllDevices.setVisibility(View.INVISIBLE);
-        } else {
-            tvNotFound.setVisibility(View.INVISIBLE);
-            spinnerAllDevices.setVisibility(View.VISIBLE);
-            ArrayAdapter<Device> adapter = new ArrayAdapter<Device>(Objects.requireNonNull(getContext()),
-                    android.R.layout.simple_spinner_dropdown_item,
-                    devices);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerAllDevices.setAdapter(adapter);
-
-            spinnerAllDevices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Device device = (Device) parent.getItemAtPosition(position);
-                    try {
-                        deviceUpdateLayout.setVisibility(View.VISIBLE);
-                        etDeviceName.setText(device.getName());
-                        etDevicePin.setText(device.getPin().toString());
-                        ArrayAdapter adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()), R.array.deviceTypes, android.R.layout.simple_spinner_item);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerConfigDeviceType.setAdapter(adapter);
-                        spinnerConfigDeviceType.setSelection(device.getDeviceType().ordinal());
-                        bUpdateDevice.setOnClickListener(view1 -> {
-                            deviceService.update(device.getId(),
-                                    etDeviceName.getText().toString(),
-                                    Integer.parseInt(etDevicePin.getText().toString()),
-                                    DeviceType.values()[spinnerConfigDeviceType.getSelectedItemPosition()].toString(),
-                                    UserDetails.user.getHouse().getId());
-                            getActivity().recreate();
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "Вибачте, сталася помилка", Toast.LENGTH_SHORT).show();
+                spinnerAllDevices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Device device = (Device) parent.getItemAtPosition(position);
+                        try {
+                            deviceUpdateLayout.setVisibility(View.VISIBLE);
+                            etDeviceName.setText(device.getName());
+                            etDevicePin.setText(device.getPin().toString());
+                            ArrayAdapter adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()), R.array.deviceTypes, android.R.layout.simple_spinner_item);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerConfigDeviceType.setAdapter(adapter);
+                            spinnerConfigDeviceType.setSelection(device.getDeviceType().ordinal());
+                            bUpdateDevice.setOnClickListener(view1 -> {
+                                deviceService.update(device.getId(),
+                                        etDeviceName.getText().toString(),
+                                        Integer.parseInt(etDevicePin.getText().toString()),
+                                        DeviceType.values()[spinnerConfigDeviceType.getSelectedItemPosition()].toString(),
+                                        UserDetails.user.getHouse().getId());
+                                getActivity().recreate();
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Вибачте, сталася помилка", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
 
-                }
-            });
+                    }
+                });
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Вибачте, сталася помилка", Toast.LENGTH_SHORT).show();
         }
         bUpdateUser.setOnClickListener(view1 -> {
             try {

@@ -138,14 +138,14 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            this.recreate();
-//            int count = getFragmentManager().getBackStackEntryCount();
-//
-//            if (count == 0) {
-//                super.onBackPressed();
-//            } else {
-//                getFragmentManager().popBackStack();
-//            }
+//            this.recreate();
+            int count = getFragmentManager().getBackStackEntryCount();
+
+            if (count == 0) {
+                super.onBackPressed();
+            } else {
+                getFragmentManager().popBackStack();
+            }
         }
     }
 
