@@ -74,9 +74,13 @@
 
     <string name="humidity_up">The humidity level rises</string>
 
+    <string name="humidity_ok">The humidity is normal</string>
+
     <string name="warning_police">Triggered panic button!</string>
 
     <string name="warning_fire">Triggered fire alarm!</string>
+
+    <string name="searching_your_device">Searching your device\.\.\.</string>
 
     <string-array name="deviceTypes">
         <item>Light</item>

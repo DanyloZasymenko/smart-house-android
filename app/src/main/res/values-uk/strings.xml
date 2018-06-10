@@ -74,9 +74,13 @@
 
     <string name="humidity_up">Повітря зволожується</string>
 
+    <string name="humidity_ok">Вологість в нормі</string>
+
     <string name="warning_police">Спрацювала тривожна кнопка!</string>
 
     <string name="warning_fire">Спрацювала пожежна сигналізація!</string>
+
+    <string name="searching_your_device">Шукаємо ваш пристрій\.\.\.</string>
 
     <string-array name="deviceTypes">
         <item>Світло</item>

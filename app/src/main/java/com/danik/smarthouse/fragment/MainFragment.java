@@ -120,6 +120,8 @@ public class MainFragment extends Fragment {
                     tvHumidityStatus.setText(getString(R.string.humidity_down));
                 else
                     tvHumidityStatus.setText(getString(R.string.humidity_up));
+                if(humidity == UserDetails.user.getHouse().getHumidity())
+                    tvHumidityStatus.setText(getString(R.string.humidity_ok));
                 List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
                 for (Device device : devices) {
                     devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
@@ -180,7 +182,7 @@ public class MainFragment extends Fragment {
                         });
                         firstActive = false;
                         try {
-                            Thread.sleep(15000);
+                            Thread.sleep(5000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
