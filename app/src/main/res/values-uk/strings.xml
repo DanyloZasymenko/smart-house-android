@@ -38,7 +38,7 @@
 
     <string name="devices_not_found">Пристроїв немає</string>
 
-    <string name="fill_in_your_configs">Задайте бажані параметри</string>
+    <string name="fill_in_your_configs">Ваші параметри</string>
     <string name="temperature">Температура</string>
     <string name="humidity">Вологість</string>
 
