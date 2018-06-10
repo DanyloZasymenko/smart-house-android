@@ -143,12 +143,14 @@ public class MainActivity extends AppCompatActivity
             int count = getFragmentManager().getBackStackEntryCount();
 
             if (count == 0) {
+//                super.onBackPressed();
                 Intent a = new Intent(Intent.ACTION_MAIN);
                 a.addCategory(Intent.CATEGORY_HOME);
                 a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(a);
             } else {
                 getFragmentManager().popBackStack();
+//                super.onBackPressed();
             }
         }
     }

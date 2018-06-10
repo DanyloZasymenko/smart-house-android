@@ -22,19 +22,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.danik.smarthouse.MainActivity;
 import com.danik.smarthouse.R;
 import com.danik.smarthouse.service.UserService;
 import com.danik.smarthouse.service.impl.UserServiceImpl;
-import com.danik.smarthouse.service.utils.HttpClient;
 import com.danik.smarthouse.service.utils.JsonMapper;
 import com.danik.smarthouse.service.utils.Url;
 import com.danik.smarthouse.service.utils.UserDetails;
@@ -47,7 +44,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -92,20 +88,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Button register = (Button) findViewById(R.id.bRegister);
         register.setOnClickListener(v -> LoginActivity.this.startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
 
+    }
 
-        new View(this.getBaseContext()).setOnKeyListener( new View.OnKeyListener()
-        {
-            @Override
-            public boolean onKey( View v, int keyCode, KeyEvent event )
-            {
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-                    LoginActivity.super.onBackPressed();
-                    return true;
-                }
-                return false;
-            }
-        } );
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+            return true;
+        }
 
+        return super.onKeyDown(keyCode, event);
     }
 
     private void populateAutoComplete() {
@@ -180,7 +175,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (cancel) {
-
             Log.i("tag", "cancel");
             focusView.requestFocus();
         } else {

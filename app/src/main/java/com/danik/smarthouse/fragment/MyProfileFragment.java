@@ -148,7 +148,7 @@ public class MyProfileFragment extends Fragment {
                             });
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), R.string.mistake, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), R.string.mistake, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -160,7 +160,7 @@ public class MyProfileFragment extends Fragment {
             }
         }catch(Exception e){
             e.printStackTrace();
-            Toast.makeText(getContext(), R.string.mistake, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), R.string.mistake, Toast.LENGTH_SHORT).show();
         }
         bUpdateUser.setOnClickListener(view1 -> {
             try {
