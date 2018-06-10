@@ -4,6 +4,8 @@ import com.danik.smarthouse.model.User;
 
 public class UserDetails {
 
+    public static Boolean temperatureCelsius = true;
+
     public static String accessToken = null;
 
     public static User user = null;

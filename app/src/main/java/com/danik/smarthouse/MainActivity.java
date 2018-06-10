@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.danik.smarthouse.activity.LoginActivity;
 import com.danik.smarthouse.fragment.AlertFragment;
 import com.danik.smarthouse.fragment.MainFragment;
+import com.danik.smarthouse.fragment.MyProfileFragment;
 import com.danik.smarthouse.fragment.NewDeviceFragment;
 import com.danik.smarthouse.fragment.NewHouseFragment;
 import com.danik.smarthouse.fragment.SettingsFragment;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity
         NewHouseFragment.OnFragmentInteractionListener,
         NewDeviceFragment.OnFragmentInteractionListener,
         TemperatureFragment.OnFragmentInteractionListener,
-        AlertFragment.OnFragmentInteractionListener {
+        AlertFragment.OnFragmentInteractionListener,
+        MyProfileFragment.OnFragmentInteractionListener {
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -109,16 +111,15 @@ public class MainActivity extends AppCompatActivity
                 Runnable runnable = () -> {
                     while (true) {
                         handler.post(() -> {
-                            AlertButtons.getInstance().setValues(androidService.checkAlert());
                             if (AlertButtons.getInstance().getFire()) {
-                                Toast.makeText(this, "Спрацювала пожежна сигналізація!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, getString(R.string.warning_fire), Toast.LENGTH_SHORT).show();
                             }
                             if (AlertButtons.getInstance().getPolice()) {
-                                Toast.makeText(this, "Спрацювала тривожна кнопка!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, getString(R.string.warning_police), Toast.LENGTH_SHORT).show();
                             }
                         });
                         try {
-                            Thread.sleep(4000);
+                            Thread.sleep(3000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -142,7 +143,10 @@ public class MainActivity extends AppCompatActivity
             int count = getFragmentManager().getBackStackEntryCount();
 
             if (count == 0) {
-                super.onBackPressed();
+                Intent a = new Intent(Intent.ACTION_MAIN);
+                a.addCategory(Intent.CATEGORY_HOME);
+                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(a);
             } else {
                 getFragmentManager().popBackStack();
             }
@@ -183,6 +187,8 @@ public class MainActivity extends AppCompatActivity
             changeFragment(R.id.main_frame, SettingsFragment.newInstance());
         } else if (id == R.id.nav_alert) {
             changeFragment(R.id.main_frame, AlertFragment.newInstance());
+        } else if (id == R.id.nav_my_profile) {
+            changeFragment(R.id.main_frame, MyProfileFragment.newInstance());
         } else if (id == R.id.nav_exit) {
             UserDetails.logout();
             this.recreate();

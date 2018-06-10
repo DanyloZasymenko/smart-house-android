@@ -3,21 +3,23 @@ package com.danik.smarthouse.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.danik.smarthouse.R;
@@ -52,10 +54,12 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        ScrollView scrollView = view.findViewById(R.id.scrollViewMainFragment);
         ConstraintLayout generalLayout = view.findViewById(R.id.generalLayout);
         ConstraintLayout notFindLayout = view.findViewById(R.id.notFindLayout);
         LinearLayout devicesLayout = view.findViewById(R.id.devicesLayout);
@@ -65,20 +69,22 @@ public class MainFragment extends Fragment {
         TextView tvCurrentTemperature = view.findViewById(R.id.tvCurrentTemperature);
         TextView tvCurrentHumidity = view.findViewById(R.id.tvCurrentHumidity);
         TextView tvUserHumidity = view.findViewById(R.id.tvUserHumidity);
+        TextView tvHumidityStatus = view.findViewById(R.id.tvHumidityStatus);
         tvTemperatureStatus.setVisibility(View.INVISIBLE);
         ivTemperatureStatus.setVisibility(View.INVISIBLE);
         if (UserDetails.user != null) {
             tvUserTemperature.setText(UserDetails.user.getHouse().getTemperature().toString());
             tvUserHumidity.setText(UserDetails.user.getHouse().getHumidity().toString() + "%");
             try {
-                String temperature = Temperature.getInstance().getTemperatureC().toString();
-                String humidity = Temperature.getInstance().getHumidity().toString();
-                Log.e("temperature", temperature);
-                Log.e("humidity", humidity);
-                tvCurrentHumidity.setText(humidity + "%");
-                if (Temperature.getInstance().getTemperatureC() > UserDetails.user.getHouse().getTemperature()) {
+                Float temperature;
+                if (UserDetails.temperatureCelsius)
+                    temperature = Temperature.getInstance().getTemperatureC();
+                else
+                    temperature = Temperature.getInstance().getTemperatureF();
+                Float humidity = Temperature.getInstance().getHumidity();
+                if (temperature > UserDetails.user.getHouse().getTemperature()) {
                     ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_ice);
-                    tvTemperatureStatus.setText("Температура опускається до " + UserDetails.user.getHouse().getTemperature() + " ...");
+                    tvTemperatureStatus.setText(getString(R.string.temperature_down)+ " " + UserDetails.user.getHouse().getTemperature() + " ...");
                     tvTemperatureStatus.setVisibility(View.VISIBLE);
                     ivTemperatureStatus.setVisibility(View.VISIBLE);
                     for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
@@ -89,7 +95,7 @@ public class MainFragment extends Fragment {
                     }
                 } else {
                     ivTemperatureStatus.setImageResource(R.drawable.ic_thermometer_sun);
-                    tvTemperatureStatus.setText("Температура піднімається до " + UserDetails.user.getHouse().getTemperature() + " ...");
+                    tvTemperatureStatus.setText(getString(R.string.temperature_up)+ " " + UserDetails.user.getHouse().getTemperature() + " ...");
                     tvTemperatureStatus.setVisibility(View.VISIBLE);
                     ivTemperatureStatus.setVisibility(View.VISIBLE);
                     for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_HEAT", UserDetails.user.getHouse().getId())) {
@@ -99,9 +105,9 @@ public class MainFragment extends Fragment {
                         androidService.changeActive(device.getId(), false);
                     }
                 }
-                if (Temperature.getInstance().getTemperatureC().equals(UserDetails.user.getHouse().getTemperature())) {
+                if (temperature.equals(UserDetails.user.getHouse().getTemperature())) {
                     ivTemperatureStatus.setVisibility(View.INVISIBLE);
-                    tvTemperatureStatus.setText("Температура в нормі");
+                    tvTemperatureStatus.setText(getString(R.string.temperature_ok));
                     tvTemperatureStatus.setVisibility(View.VISIBLE);
                     for (Device device : deviceService.findAllByDeviceTypeAndHouseId("CLIMATE_CONDITIONING", UserDetails.user.getHouse().getId())) {
                         androidService.changeActive(device.getId(), false);
@@ -110,6 +116,10 @@ public class MainFragment extends Fragment {
                         androidService.changeActive(device.getId(), false);
                     }
                 }
+                if (humidity > UserDetails.user.getHouse().getHumidity())
+                    tvHumidityStatus.setText(getString(R.string.humidity_down));
+                else
+                    tvHumidityStatus.setText(getString(R.string.humidity_up));
                 List<Device> devices = deviceService.findAllByHouseId(UserDetails.user.getHouse().getId());
                 for (Device device : devices) {
                     devicesLayout.addView(new OneDeviceMainFragment().setDevice(device).onCreateView(inflater, container, savedInstanceState));
@@ -121,7 +131,6 @@ public class MainFragment extends Fragment {
         FloatingActionButton fab = view.findViewById(R.id.fab);
         FloatingActionButton fab2 = view.findViewById(R.id.fab2);
         fab.setOnClickListener(v -> {
-            Log.i("listen", "in fab");
             onButtonPressed(R.id.main_frame);
         });
         fab2.setOnClickListener(v -> getActivity().recreate());
@@ -161,7 +170,10 @@ public class MainFragment extends Fragment {
                                 fab2.setVisibility(View.VISIBLE);
                                 devicesLayout.setVisibility(View.VISIBLE);
                                 notFindLayout.setVisibility(View.INVISIBLE);
-                                tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
+                                if (UserDetails.temperatureCelsius)
+                                    tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureC().toString());
+                                else
+                                    tvCurrentTemperature.setText(Temperature.getInstance().getTemperatureF().toString());
                                 tvCurrentHumidity.setText(Temperature.getInstance().getHumidity().toString() + "%");
                                 firstActive = true;
                             }

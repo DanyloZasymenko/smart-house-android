@@ -1,0 +1,86 @@
+<resources>
+    <string name="title_activity_login">Увійти</string>
+
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in_short">Увійти</string>
+    <string name="error_invalid_email">Неправильний e-mail</string>
+    <string name="error_invalid_password">Пароль закороткий</string>
+    <string name="error_incorrect_password">Неправильний пароль</string>
+    <string name="error_field_required">Це поле обов\'язкове</string>
+    <string name="error_passwords_do_not_match">Паролі не співпадають</string>
+
+
+    <string name="button_add">Додати</string>
+    <string name="button_update">Оновити</string>
+
+    <string name="button_sign_in">Увійти</string>
+    <string name="button_sign_up">Зареєструватися</string>
+    <string name="sign_up_name">Ім\'я</string>
+    <string name="sign_up_middle_name">По батькові</string>
+    <string name="sign_up_last_name">Прізвище</string>
+    <string name="sign_up_repeat_password">Повторіть пароль</string>
+    <string name="panic_button">Тривожна кнопка</string>
+    <string name="fire_alarm">Пожежна сигналізація</string>
+    <string name="button_cancel_alert">Відміна</string>
+    <string name="new_device_name">Ім\'я</string>
+    <string name="new_device_pin">Пін</string>
+
+    <string name="new_house_serial">Введіть серійний номер будинку</string>
+    <string name="new_house_name">Введіть ім\'я будинку</string>
+
+    <string name="update">Оновити</string>
+    <string name="update_user">Користувача</string>
+    <string name="update_house">Будинок</string>
+    <string name="update_device">Пристрій</string>
+
+    <string name="need_to_restart_app">(Необхідно буде перезавантажити додаток)</string>
+
+    <string name="devices_not_found">Пристроїв немає</string>
+
+    <string name="fill_in_your_configs">Задайте бажані параметри</string>
+    <string name="temperature">Температура</string>
+    <string name="humidity">Вологість</string>
+
+    <string name="menu_my_house">Мій будинок</string>
+    <string name="menu_my_profile">Редагувати дані</string>
+    <string name="menu_alert">Аварійні виклики</string>
+    <string name="menu_settings">Загальні налаштування</string>
+    <string name="menu_exit">Вихід</string>
+
+    <string name="temperature_humidity">Температура/Вологість</string>
+
+    <string name="change_language">Змінити мову</string>
+
+    <string name="choose_language">Виберіть мову</string>
+
+    <string name="temperature_measurement">Одиниці вимірювання температури</string>
+
+    <string name="choose_temperature_measurement">Виберіть одиниці: </string>
+
+    <string name="celsius">Цельсій</string>
+
+    <string name="fahrenheit">Фаренгейт</string>
+
+    <string name="mistake">Вибачте, сталася помилка</string>
+
+    <string name="temperature_down">Температура опускається до </string>
+
+    <string name="temperature_up">Температура піднімається до </string>
+
+    <string name="temperature_ok">Температура в нормі</string>
+
+    <string name="humidity_down">Вологість знижується</string>
+
+    <string name="humidity_up">Повітря зволожується</string>
+
+    <string name="warning_police">Спрацювала тривожна кнопка!</string>
+
+    <string name="warning_fire">Спрацювала пожежна сигналізація!</string>
+
+    <string-array name="deviceTypes">
+        <item>Світло</item>
+        <item>Клімат-Опалення</item>
+        <item>Клімат-Кондиціонування</item>
+    </string-array>
+</resources>

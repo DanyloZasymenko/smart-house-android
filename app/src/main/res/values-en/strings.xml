@@ -1,0 +1,86 @@
+<resources>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">Invalid e-mail</string>
+    <string name="error_invalid_password">The password is too short</string>
+    <string name="error_incorrect_password">Invalid password</string>
+    <string name="error_field_required">Required field</string>
+    <string name="error_passwords_do_not_match">The passwords do not match</string>
+
+
+    <string name="button_add">Add</string>
+    <string name="button_update">Update</string>
+
+    <string name="button_sign_in">Sign in</string>
+    <string name="button_sign_up">Sign up</string>
+    <string name="sign_up_name">Name</string>
+    <string name="sign_up_middle_name">Middle name</string>
+    <string name="sign_up_last_name">Last name</string>
+    <string name="sign_up_repeat_password">Repeat password</string>
+    <string name="panic_button">Panic button</string>
+    <string name="fire_alarm">Fire alarm</string>
+    <string name="button_cancel_alert">Cancel</string>
+    <string name="new_device_name">Name</string>
+    <string name="new_device_pin">Pin</string>
+
+    <string name="new_house_serial">Fill in serial</string>
+    <string name="new_house_name">Fill in name</string>
+
+    <string name="update">Update</string>
+    <string name="update_user">User</string>
+    <string name="update_house">House</string>
+    <string name="update_device">Device</string>
+
+    <string name="need_to_restart_app">(You will need to reload the application)</string>
+
+    <string name="devices_not_found">There are no devices</string>
+
+    <string name="fill_in_your_configs">Set parameters</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+
+    <string name="menu_my_house">My house</string>
+    <string name="menu_my_profile">Edit personal data</string>
+    <string name="menu_alert">Emergency calls</string>
+    <string name="menu_settings">General settings</string>
+    <string name="menu_exit">Exit</string>
+
+    <string name="temperature_humidity">Temperature/Humidity</string>
+
+    <string name="change_language">Change language</string>
+
+    <string name="choose_language">Choose language</string>
+
+    <string name="temperature_measurement">Temperature measurement unit</string>
+
+    <string name="choose_temperature_measurement">Choose measurement unit: </string>
+
+    <string name="celsius">Celsius</string>
+
+    <string name="fahrenheit">Fahrenheit</string>
+
+    <string name="mistake">Oops, something went wrong</string>
+
+    <string name="temperature_down">The temperature drops to </string>
+
+    <string name="temperature_up">The temperature rises to</string>
+
+    <string name="temperature_ok">The temperature is normal</string>
+
+    <string name="humidity_down">The humidity level falls</string>
+
+    <string name="humidity_up">The humidity level rises</string>
+
+    <string name="warning_police">Triggered panic button!</string>
+
+    <string name="warning_fire">Triggered fire alarm!</string>
+
+    <string-array name="deviceTypes">
+        <item>Light</item>
+        <item>Climate-Heat</item>
+        <item>Climate-Conditioning</item>
+    </string-array>
+</resources>

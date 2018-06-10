@@ -5,6 +5,6 @@
         android:id="@+id/action_settings"
         android:checkable="false"
         android:orderInCategory="100"
-        android:title="Температура/Вологість"
+        android:title="@string/temperature_humidity"
         app:showAsAction="never" />
 </menu>

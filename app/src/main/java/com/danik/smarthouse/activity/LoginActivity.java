@@ -59,7 +59,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
-    HttpClient httpClient = new HttpClient();
 
     private UserService userService = new UserServiceImpl();
 
@@ -76,15 +75,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+        mPasswordView.setOnEditorActionListener((textView, id, keyEvent) -> {
+            if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
             }
+            return false;
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
@@ -95,6 +91,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         Button register = (Button) findViewById(R.id.bRegister);
         register.setOnClickListener(v -> LoginActivity.this.startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
+
+
+        new View(this.getBaseContext()).setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+                    LoginActivity.super.onBackPressed();
+                    return true;
+                }
+                return false;
+            }
+        } );
+
     }
 
     private void populateAutoComplete() {
