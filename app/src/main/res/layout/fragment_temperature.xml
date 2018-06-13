@@ -28,15 +28,15 @@
 
         <EditText
             android:id="@+id/etSaveTemperature"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="25dp"
             android:ems="10"
-            android:hint="@string/temperature"
             android:inputType="none"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -54,17 +54,69 @@
 
         <EditText
             android:id="@+id/etSaveHumidity"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/humidity"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etSaveTemperature" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/temperature"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/etSaveTemperature"
+            app:layout_constraintEnd_toStartOf="@+id/etSaveTemperature"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etSaveTemperature" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_degrees"
+            app:layout_constraintStart_toEndOf="@+id/etSaveTemperature"
+            app:layout_constraintTop_toTopOf="@+id/etSaveTemperature" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/humidity"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/etSaveHumidity"
+            app:layout_constraintEnd_toStartOf="@+id/etSaveHumidity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etSaveHumidity" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="%"
+            android:textColor="@android:color/background_light"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/etSaveHumidity"
+            app:layout_constraintStart_toEndOf="@+id/etSaveHumidity"
+            app:layout_constraintTop_toTopOf="@+id/etSaveHumidity" />
 
     </android.support.constraint.ConstraintLayout>
 

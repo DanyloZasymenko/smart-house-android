@@ -1,5 +1,8 @@
 package com.danik.smarthouse;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -9,6 +12,8 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +40,7 @@ import com.danik.smarthouse.service.AndroidService;
 import com.danik.smarthouse.service.impl.AndroidServiceImpl;
 import com.danik.smarthouse.service.utils.UserDetails;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -80,6 +86,21 @@ public class MainActivity extends AppCompatActivity
         TextView tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
         TextView tvHouseName = (TextView) headerView.findViewById(R.id.tvHouseName);
 
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (UserDetails.user == null) {
             MainActivity.this.startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else if (UserDetails.user.getHouse() == null) {
@@ -112,10 +133,18 @@ public class MainActivity extends AppCompatActivity
                     while (true) {
                         handler.post(() -> {
                             if (AlertButtons.getInstance().getFire()) {
-                                Toast.makeText(this, getString(R.string.warning_fire), Toast.LENGTH_SHORT).show();
+                                mBuilder.setSmallIcon(R.drawable.ic_fire_small)
+                                        .setContentTitle(getString(R.string.menu_alert))
+                                        .setContentText(getString(R.string.warning_fire));
+                                mNotificationManager.notify(0, mBuilder.build());
+//                                Toast.makeText(this, getString(R.string.warning_fire), Toast.LENGTH_SHORT).show();
                             }
                             if (AlertButtons.getInstance().getPolice()) {
-                                Toast.makeText(this, getString(R.string.warning_police), Toast.LENGTH_SHORT).show();
+                                mBuilder.setSmallIcon(R.drawable.ic_police_small)
+                                        .setContentTitle(getString(R.string.menu_alert))
+                                        .setContentText(getString(R.string.warning_police));
+                                mNotificationManager.notify(0, mBuilder.build());
+//                                Toast.makeText(this, getString(R.string.warning_police), Toast.LENGTH_SHORT).show();
                             }
                         });
                         try {
@@ -139,18 +168,14 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-//            this.recreate();
-            int count = getFragmentManager().getBackStackEntryCount();
-
-            if (count == 0) {
-//                super.onBackPressed();
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            if (fragments.size() == 0 || fragments.get(0).getClass().equals(MainFragment.class)) {
                 Intent a = new Intent(Intent.ACTION_MAIN);
                 a.addCategory(Intent.CATEGORY_HOME);
                 a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(a);
             } else {
-                getFragmentManager().popBackStack();
-//                super.onBackPressed();
+                super.onBackPressed();
             }
         }
     }
@@ -204,7 +229,7 @@ public class MainActivity extends AppCompatActivity
     private void changeFragment(Integer id, Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(id, fragment).commit();
+                .replace(id, fragment).addToBackStack(null).commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
