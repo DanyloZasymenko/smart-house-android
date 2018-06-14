@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,7 +88,8 @@ public class MainActivity extends AppCompatActivity
         TextView tvHouseName = (TextView) headerView.findViewById(R.id.tvHouseName);
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this);
+                new NotificationCompat.Builder(this)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         Intent resultIntent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
